@@ -4,6 +4,7 @@
       class="bm-view"
       :zoom="5"
       :min-zoom="5"
+      :max-zoom="18"
       :map-click="true"
       :center="{ lng: 100, lat: 40 }"
       :scroll-wheel-zoom="true"
@@ -21,7 +22,7 @@
             imageSize: { width: 20, height: 24 },
           },
         }"
-        :title="location"
+        title="location"
         :zIndex="13373461"
       ></bm-marker>
 
@@ -44,6 +45,7 @@
 
 <script lang="ts" setup>
 import { ref } from 'vue'
+import { getImageUrl } from '@/utils/index'
 
 const mapStyle = ref({
   styleId: 'f336be4c92fa3f2601f0298d5fa7aca8',
@@ -58,12 +60,7 @@ const handleZoomend = (type: any, target: any) => {
   console.log('zoomend')
 }
 
-const getImageUrl = (path: String) => {
-  console.log(new URL(`../assets/img/${path}`, import.meta.url).href)
-  return new URL(`../assets/img/${path}`, import.meta.url).href
-}
-
-const location = ref({})
+const location = ref({ lng: 116.4149881093699, lat: 39.89733849090521 })
 const handleClick = (type: any, target: any, point: any, pixel: any, overlay: any) => {
   console.log(type, target, point, pixel, overlay)
   console.log('click')
@@ -75,19 +72,10 @@ const handleLocationSuccess = (point: any, AddressComponent: any, marker: any) =
   console.log(point, AddressComponent, marker)
   location.value = point.point
 }
-// // import { BMap } from 'vue-baidu-map-3x'
 
-// const mapContainer = ref(null)
-// let mapInstance = null
-
-// onMounted(() => {
-//   // var map = new BMap.Map("map");
-//   //   var point = new BMap.Point(116.404, 39.915);
-//   //   map.centerAndZoom(point, 15);
-//   mapInstance = new BMap.Map(mapContainer.value)
-//   const point = new BMap.Point(116.404, 39.915)
-//   mapInstance.centerAndZoom(point, 15)
-// })
+defineExpose({
+  location,
+})
 </script>
 <style lang="scss" scoped>
 .main {
