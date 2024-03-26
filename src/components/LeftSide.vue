@@ -75,17 +75,17 @@
             <MyCard title="生活指数">
               <div class="box">
                 <div class="item">
-                  <img src="@/assets/img/comfort.png" alt="" />
+                  <img src="@/assets/img/bodytem.png" alt="体感温度" />
                   <div class="text">
                     <p>体感温度</p>
-                    <p>9.5℃</p>
+                    <p>{{ bodytem }}℃</p>
                   </div>
                 </div>
                 <div class="item">
-                  <img src="@/assets/img/comfort.png" alt="" />
+                  <img src="@/assets/img/comfort.png" alt="舒适度" />
                   <div class="text">
-                    <p>体感温度</p>
-                    <p>9.5℃</p>
+                    <p>舒适度</p>
+                    <p>{{ comfort }}</p>
                   </div>
                 </div>
               </div>
@@ -111,7 +111,7 @@
 <script lang="ts" setup>
 import { toRaw, inject, Ref, ref, computed, watch } from 'vue'
 import type { ProxyCoord } from '@/types/http'
-import { getLocationBaseElement, getLocationGeo } from '@/http'
+import { getLocationBaseElement, getLocationGeo, getLocationLifeIndex } from '@/http'
 import { getImageUrl, formatVis, formatPre } from '@/utils'
 import MyScroll from './components/MyScroll.vue'
 import MyCard from './components/MyCard.vue'
@@ -196,18 +196,25 @@ const getLocationBaseEleInfo = async () => {
   weaEle.value.pre_24h = res.data.list[12].value
 }
 
-// watchEffect(() => {
-//   if (location.value) {
-//     getLocationGeoInfo()
-//     getLocationBaseEleInfo()
-//   }
-// })
+const bodytem = ref(0)
+const comfort = ref('')
+const getLocationLifeIndexInfo = async () => {
+  const res = await getLocationLifeIndex(pointParams.value)
+  console.log(res)
+  if (res.status !== 200) {
+    return
+  }
+  bodytem.value = res.data.DS[0].value
+  comfort.value = res.data.DS[1].feel!
+}
+
 watch(
   () => location.value,
   (newVal) => {
     if (newVal) {
       getLocationGeoInfo()
       getLocationBaseEleInfo()
+      getLocationLifeIndexInfo()
     }
   }
 )
