@@ -92,7 +92,17 @@
             </MyCard>
           </div>
           <div class="warn-info">
-            <MyCard title="预警信息"></MyCard>
+            <MyCard title="预警信息">
+              <div class="warn-item" v-for="item in warnInfoList" key="item.dataid">
+                <div class="warn-title">{{ item.warnDefine.typeName }}预警</div>
+                <div class="warn-sender">
+                  <span>{{ item.sender }} {{ item.time }}</span>
+                </div>
+                <div class="warn-content">
+                  {{ item.issuecontent }}
+                </div>
+              </div>
+            </MyCard>
           </div>
           <div class="element-detail">
             <MyCard title="要素详情"></MyCard>
@@ -111,7 +121,8 @@
 <script lang="ts" setup>
 import { toRaw, inject, Ref, ref, computed, watch } from 'vue'
 import type { ProxyCoord } from '@/types/http'
-import { getLocationBaseElement, getLocationGeo, getLocationLifeIndex } from '@/http'
+import type { LocationWarnData } from '@/types/warnInfo'
+import { getLocationBaseElement, getLocationGeo, getLocationLifeIndex, getLocationWarning } from '@/http'
 import { getImageUrl, formatVis, formatPre } from '@/utils'
 import MyScroll from './components/MyScroll.vue'
 import MyCard from './components/MyCard.vue'
@@ -125,6 +136,7 @@ const pointParams = computed(() => {
   return toRaw(location.value)
 })
 
+// 获取地理信息与天气
 const weatherType = ref('0')
 const address = ref('')
 const formatAddress = ref('')
@@ -145,7 +157,7 @@ const getLocationGeoInfo = async () => {
 
   formatAddress.value = res.data.regeocode.formatted_address
 }
-
+// 获取天气要素
 const weaEle = ref({
   // 温度
   tem: '0',
@@ -195,7 +207,7 @@ const getLocationBaseEleInfo = async () => {
   weaEle.value.pre_12h = res.data.list[11].value
   weaEle.value.pre_24h = res.data.list[12].value
 }
-
+// 获取生活指数
 const bodytem = ref(0)
 const comfort = ref('')
 const getLocationLifeIndexInfo = async () => {
@@ -207,6 +219,13 @@ const getLocationLifeIndexInfo = async () => {
   bodytem.value = res.data.DS[0].value
   comfort.value = res.data.DS[1].feel!
 }
+// 获取预警信息
+const warnInfoList = ref<LocationWarnData[]>([])
+const getLocationWarningInfo = async () => {
+  const res = await getLocationWarning(pointParams.value)
+  console.log(res)
+  warnInfoList.value = res.data
+}
 
 watch(
   () => location.value,
@@ -215,6 +234,7 @@ watch(
       getLocationGeoInfo()
       getLocationBaseEleInfo()
       getLocationLifeIndexInfo()
+      getLocationWarningInfo()
     }
   }
 )
@@ -443,6 +463,45 @@ watch(
             align-self: center;
             line-height: 1.3;
           }
+        }
+      }
+    }
+    .warn-info {
+      .warn-item {
+        padding: 0 10px;
+        .warn-title {
+          font-size: 14px;
+          line-height: 30px;
+          font-weight: 600;
+          text-align: left;
+          padding-left: 14px;
+          position: relative;
+          &:before {
+            position: absolute;
+            content: '';
+            width: 5px;
+            height: 14px;
+            border-radius: 2.5px;
+            left: 5px;
+            background: #000;
+            top: 50%;
+            transform: translateY(-50%);
+          }
+        }
+        .warn-sender {
+          color: #959ca6;
+          text-align: left;
+          padding-left: 10px;
+          border-bottom: 0.5px solid #e8e8ea;
+        }
+        .warn-content {
+          margin-top: 4px;
+          font-size: 12px;
+          line-height: 22px;
+          text-align: left;
+          text-indent: 10px;
+
+          margin-bottom: 10px;
         }
       }
     }
