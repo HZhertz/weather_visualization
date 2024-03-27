@@ -10,8 +10,10 @@
   },
   "dependencies": {
     "axios": "^1.6.8",
+    "echarts": "^5.5.0",
     "vue": "^3.4.21",
-    "vue-baidu-map-3x": "^1.0.37"
+    "vue-baidu-map-3x": "^1.0.37",
+    "vue-echarts": "^6.6.9"
   },
   "devDependencies": {
     "@types/node": "^20.11.30",

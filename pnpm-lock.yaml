@@ -8,12 +8,18 @@ dependencies:
   axios:
     specifier: ^1.6.8
     version: 1.6.8
+  echarts:
+    specifier: ^5.5.0
+    version: 5.5.0
   vue:
     specifier: ^3.4.21
     version: 3.4.21(typescript@5.4.3)
   vue-baidu-map-3x:
     specifier: ^1.0.37
     version: 1.0.37(vue@3.4.21)
+  vue-echarts:
+    specifier: ^6.6.9
+    version: 6.6.9(echarts@5.5.0)(vue@3.4.21)
 
 devDependencies:
   '@types/node':
@@ -614,6 +620,13 @@ packages:
     engines: {node: '>=0.4.0'}
     dev: false
 
+  /echarts@5.5.0:
+    resolution: {integrity: sha512-rNYnNCzqDAPCr4m/fqyUFv7fD9qIsd50S6GDFgO1DxZhncCsNsG7IfUlAlvZe5oSEQxtsjnHiUuppzccry93Xw==}
+    dependencies:
+      tslib: 2.3.0
+      zrender: 5.5.0
+    dev: false
+
   /entities@4.5.0:
     resolution: {integrity: sha512-V0hjH4dGPh9Ao5p0MoRY6BVqtwCjhz6vI5LT8AJ55H+4g9/4vbHx1I54fS0XuclLhDHArPQCiMjDxjaL8fPxhw==}
     engines: {node: '>=0.12'}
@@ -818,6 +831,10 @@ packages:
       picomatch: 2.3.1
     dev: true
 
+  /resize-detector@0.3.0:
+    resolution: {integrity: sha512-R/tCuvuOHQ8o2boRP6vgx8hXCCy87H1eY9V5imBYeVNyNVpuL9ciReSccLj2gDcax9+2weXy3bc8Vv+NRXeEvQ==}
+    dev: false
+
   /rollup@4.13.0:
     resolution: {integrity: sha512-3YegKemjoQnYKmsBlOHfMLVPPA5xLkQ8MHLLSw/fBrFaVkEayL51DilPpNNLq1exr98F2B1TzrV0FUlN3gWRPg==}
     engines: {node: '>=18.0.0', npm: '>=8.0.0'}
@@ -903,6 +920,10 @@ packages:
       is-number: 7.0.0
     dev: true
 
+  /tslib@2.3.0:
+    resolution: {integrity: sha512-N82ooyxVNm6h1riLCoyS9e3fuJ3AMG2zIZs2Gd1ATcSFjSA23Q0fzjjZeh0jbJvWVDZ0cJT8yaNNaaXHzueNjg==}
+    dev: false
+
   /typescript@5.4.3:
     resolution: {integrity: sha512-KrPd3PKaCLr78MalgiwJnA25Nm8HAmdwN3mYUYZgG/wizIo9EainNVQI9/yDavtVFRN2h3k8uf3GLHuhDMgEHg==}
     engines: {node: '>=14.17'}
@@ -964,6 +985,41 @@ packages:
       vue-router: 4.3.0(vue@3.4.21)
     dev: false
 
+  /vue-demi@0.13.11(vue@3.4.21):
+    resolution: {integrity: sha512-IR8HoEEGM65YY3ZJYAjMlKygDQn25D5ajNFNoKh9RSDMQtlzCxtfQjdQgv9jjK+m3377SsJXY8ysq8kLCZL25A==}
+    engines: {node: '>=12'}
+    hasBin: true
+    requiresBuild: true
+    peerDependencies:
+      '@vue/composition-api': ^1.0.0-rc.1
+      vue: ^3.0.0-0 || ^2.6.0
+    peerDependenciesMeta:
+      '@vue/composition-api':
+        optional: true
+    dependencies:
+      vue: 3.4.21(typescript@5.4.3)
+    dev: false
+
+  /vue-echarts@6.6.9(echarts@5.5.0)(vue@3.4.21):
+    resolution: {integrity: sha512-mojIq3ZvsjabeVmDthhAUDV8Kgf2Rr/X4lV4da7gEFd1fP05gcSJ0j7wa7HQkW5LlFmF2gdCJ8p4Chas6NNIQQ==}
+    requiresBuild: true
+    peerDependencies:
+      '@vue/composition-api': ^1.0.5
+      '@vue/runtime-core': ^3.0.0
+      echarts: ^5.4.1
+      vue: ^2.6.12 || ^3.1.1
+    peerDependenciesMeta:
+      '@vue/composition-api':
+        optional: true
+      '@vue/runtime-core':
+        optional: true
+    dependencies:
+      echarts: 5.5.0
+      resize-detector: 0.3.0
+      vue: 3.4.21(typescript@5.4.3)
+      vue-demi: 0.13.11(vue@3.4.21)
+    dev: false
+
   /vue-router@4.3.0(vue@3.4.21):
     resolution: {integrity: sha512-dqUcs8tUeG+ssgWhcPbjHvazML16Oga5w34uCUmsk7i0BcnskoLGwjpa15fqMr2Fa5JgVBrdL2MEgqz6XZ/6IQ==}
     peerDependencies:
@@ -1010,3 +1066,9 @@ packages:
   /yallist@4.0.0:
     resolution: {integrity: sha512-3wdGidZyq5PB084XLES5TpOSRA3wjXAlIWMhum2kRcv/41Sn2emQ0dycQW4uZXLejwKvg6EsvbdlVL+FYEct7A==}
     dev: true
+
+  /zrender@5.5.0:
+    resolution: {integrity: sha512-O3MilSi/9mwoovx77m6ROZM7sXShR/O/JIanvzTwjN3FORfLSr81PsUGd7jlaYOeds9d8tw82oP44+3YucVo+w==}
+    dependencies:
+      tslib: 2.3.0
+    dev: false

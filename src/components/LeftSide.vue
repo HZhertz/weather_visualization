@@ -104,9 +104,7 @@
               </div>
             </MyCard>
           </div>
-          <div class="element-detail">
-            <MyCard title="要素详情"></MyCard>
-          </div>
+          <ElementDetail />
           <div class="air-quality">
             <MyCard title="空气质量"></MyCard>
           </div>
@@ -126,6 +124,7 @@ import { getLocationBaseElement, getLocationGeo, getLocationLifeIndex, getLocati
 import { getImageUrl, formatVis, formatPre } from '@/utils'
 import MyScroll from './components/MyScroll.vue'
 import MyCard from './components/MyCard.vue'
+import ElementDetail from './components/ElementDetail.vue'
 
 const location = inject<Ref<ProxyCoord>>('location')
 console.log(location)
@@ -505,6 +504,7 @@ watch(
         }
       }
     }
+   
   }
 }
 </style>
