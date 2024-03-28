@@ -3,6 +3,7 @@ import type { Coord } from '@/types/http'
 import type { LocationGeoRes } from '@/types/geoInfo.d.ts'
 import type { LocationBaseElementRes, LocationEleDetailRes, LocationLifeIndexRes } from '@/types/weaInfo.d.ts'
 import type { LocationWarnRes } from '@/types/warnInfo'
+import { LocationAqiRes } from '@/types/aqiInfo'
 
 export const getLocationGeo = ({ lat, lng }: Coord): Promise<LocationGeoRes> => {
   return instance({
@@ -35,5 +36,11 @@ export const getLocationEleDetail = ({ lat, lng }: Coord): Promise<LocationEleDe
   return instance({
     method: 'GET',
     url: `/location/eledetail?lat=${lat}&lon=${lng}`,
+  })
+}
+export const getLocationAqiQuality = ({ lat, lng }: Coord): Promise<LocationAqiRes> => {
+  return instance({
+    method: 'GET',
+    url: `/location/aqiquality?lat=${lat}&lon=${lng}`,
   })
 }

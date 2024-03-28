@@ -40,3 +40,30 @@ export const ED = [
     unit: 'mm',
   },
 ]
+
+export const AQI = [
+  {
+    name: 'PM2.5',
+    key: 'PM2p5_Densty',
+  },
+  {
+    name: 'PM10',
+    key: 'PM10_Densty_Fore',
+  },
+  {
+    name: 'CO',
+    key: 'V15823',
+  },
+  {
+    name: 'NO2',
+    key: 'V15817',
+  },
+  {
+    name: 'SO2',
+    key: 'V15810',
+  },
+  {
+    name: 'O3',
+    key: 'V15826_01',
+  },
+]
