@@ -8,3 +8,10 @@ export const formatVis = (visString: string) => {
 export const formatPre = (preString: string) => {
   return Number(preString).toFixed(1)
 }
+
+export const formatLineChartTime = (arr: [string, number][]) => {
+  return arr.map(([time, value]) => {
+    const newTime = `${time.slice(6, 8)}日${time.slice(8, 10)}时`
+    return [newTime, value]
+  })
+}

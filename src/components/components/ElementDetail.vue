@@ -1,14 +1,14 @@
 <template>
-  <div class="element-detail">
+  <div class="element-detail" v-if="isShow">
     <MyCard title="要素详情">
       <div class="type-box" @click="handleClick">
         <span
-          v-for="(item, index) in items"
-          :key="index"
-          :data-index="index"
-          :class="{ selected: selectedIndex === index }"
+          v-for="item in ED"
+          :key="item.id"
+          :data-index="item.id"
+          :class="{ selected: selectedIndex === item.id }"
         >
-          {{ item }}
+          {{ item.type }}
         </span>
       </div>
       <div class="history-echart">
@@ -19,91 +19,134 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue'
+import { computed, inject, ref, toRaw, watch } from 'vue'
+import type { Ref } from 'vue'
 import { use } from 'echarts/core'
 import { CanvasRenderer } from 'echarts/renderers'
 import { LineChart } from 'echarts/charts'
 import { TooltipComponent, GridComponent, LegendComponent } from 'echarts/components'
 import VChart from 'vue-echarts'
 import MyCard from './MyCard.vue'
+import type { ProxyCoord } from '@/types/http'
+import { getLocationEleDetail } from '@/http'
+import type { LocationEleDetailData } from '@/types/weaInfo'
+import { formatLineChartTime } from '@/utils'
+import { ED } from '@/assets/ts'
 
 use([CanvasRenderer, LineChart, TooltipComponent, GridComponent, LegendComponent])
 
-let items = ['气温', '气压', '相对湿度', '极大风', '降水']
-let selectedIndex = ref(0)
+// let items = ['气温', '气压', '相对湿度', '极大风', '降水']
 
+// const ED = [
+//   {
+//     fastEle: 'TEM',
+//     type: '气温',
+//     name: '温度',
+//     unit: '℃',
+//   },
+//   {
+//     fastEle: 'PRS',
+//     type: '气压',
+//     name: '气压',
+//     unit: 'hPa',
+//   },
+//   {
+//     fastEle: 'RHU',
+//     type: '相对湿度',
+//     name: '湿度',
+//     unit: '%',
+//   },
+//   {
+//     fastEle: 'WINS',
+//     type: '极大风',
+//     name: '风速',
+//     unit: 'm/s',
+//   },
+//   {
+//     fastEle: 'PRE',
+//     type: '降水',
+//     name: '降水',
+//     unit: 'mm',
+//   },
+// ]
+const selectedIndex = ref(0)
+// const eType = ref({})
 const handleClick = (e: any) => {
   let target = e.target
   if (target.tagName.toLowerCase() === 'span') {
     selectedIndex.value = parseInt(target.dataset.index)
+    // eType.value = ED[parseInt(target.dataset.index)]
   }
   console.log(e)
 }
+const eType = computed(() => {
+  return ED[selectedIndex.value]
+})
+watch(
+  () => eType.value,
+  (newVal, oldVal) => {
+    console.log(newVal, oldVal)
+  }
+)
 
-var data1 = [
-  ['26日11时', 9.9],
-  ['26日12时', 10.3],
-  ['26日13时', 10.2],
-  ['26日14时', 10.5],
-  ['26日15时', 11.3],
-  ['26日16时', 12.7],
-  ['26日17时', 12.0],
-  ['26日18时', 10.5],
-  ['26日19时', 10.0],
-  ['26日20时', 10.0],
-  ['26日21时', 9.5],
-  ['26日22时', 9.3],
-  ['26日23时', 9.4],
-  ['27日00时', 9.3],
-  ['27日01时', 8.6],
-  ['27日02时', 7.8],
-  ['27日03时', 7.5],
-  ['27日04时', 7.8],
-  ['27日05时', 8.4],
-  ['27日06时', 9.1],
-  ['27日07时', 9.4],
-  ['27日08时', 9.8],
-  ['27日09时', 10.3],
-  ['27日10时', 10.5],
-  ['27日11时', 10.7],
-  ['27日12时', 10.7],
-  ['27日13时', 11.2],
-]
-var data2 = [
-  ['27日13时', 11.2],
-  ['27日14时', 20.0],
-  ['27日17时', 18.0],
-  ['27日20时', 17.0],
-  ['27日23时', 13.0],
-  ['28日02时', 10.0],
-  ['28日05时', 8.0],
-  ['28日08时', 11.0],
-  ['28日11时', 14.0],
-  ['28日14时', 18.0],
-  ['28日17时', 18.0],
-  ['28日20时', 14.0],
-  ['28日23时', 7.0],
-  ['29日02时', 6.0],
-  ['29日05时', 4.0],
-  ['29日08时', 7.0],
-  ['29日14时', 21.0],
-  ['29日20时', 16.0],
-  ['30日02时', 5.0],
-  ['30日08时', 8.0],
-]
+const location = inject<Ref<ProxyCoord>>('location')
+if (!location?.value) {
+  throw new Error('Location is not provided')
+}
+const pointParams = computed(() => {
+  return toRaw(location.value)
+})
+
+const lineChartData = ref<LocationEleDetailData>()
+const isShow = ref(true)
+const getLocationEleDetailInfo = async () => {
+  const res = await getLocationEleDetail(pointParams.value)
+  console.log(res)
+  lineChartData.value = res.data
+  isShow.value = lineChartData.value.sk.list.some((item) => {
+    return item.length !== 0
+  })
+}
+
+watch(
+  () => location.value,
+  (newVal) => {
+    if (newVal) {
+      getLocationEleDetailInfo()
+    }
+  }
+)
+
+const yName = computed(() => {
+  return eType.value.name + '(' + eType.value.unit + ')'
+})
+const yMin = (value: any) => {
+  return eType.value.name === '气压' ? Math.floor(value.min * 2 - value.max) : null
+}
+const skData = computed(() => {
+  if (lineChartData.value) {
+    return formatLineChartTime(lineChartData.value.sk.list[eType.value.index])
+  }
+})
+const ycData = computed(() => {
+  if (lineChartData.value) {
+    if (isShow.value) {
+      const theLastSkData = lineChartData.value.sk.list[eType.value.index].at(-1)!
+      return formatLineChartTime([theLastSkData, ...lineChartData.value.yc.list[eType.value.index]])
+    }
+  }
+})
 
 const option = ref({
   grid: {
-    left: '30',
+    left: '35',
     right: '5',
     top: '30',
     bottom: '25',
   },
   xAxis: {
     type: 'category',
-
     boundaryGap: false,
-
     axisLine: {
       lineStyle: {
         color: '#e9e9e9',
@@ -117,7 +160,8 @@ const option = ref({
 
   yAxis: {
     type: 'value',
-    name: '温度(℃)',
+    name: yName,
+    min: yMin,
     boundaryGap: [0, '20%'],
     splitLine: {
       lineStyle: {
@@ -133,10 +177,10 @@ const option = ref({
     trigger: 'axis',
     formatter: function (params: any) {
       var data = params[0].data
-      var time = data[0] // x轴的数据
-      var name = params[0].seriesName // 当前系列的名称
-      var value = data[1] // y轴的数据
-      return time + '<br />' + name + ' 温度: ' + value + '℃'
+      var time = data[0]
+      var name = params[0].seriesName
+      var value = data[1]
+      return time + '<br />' + name + ` ${eType.value.name}: ` + value + eType.value.unit
     },
   },
 
@@ -167,7 +211,7 @@ const option = ref({
           ],
         },
       },
-      data: data1,
+      data: skData,
     },
     {
       name: '预测',
@@ -195,7 +239,7 @@ const option = ref({
           ],
         },
       },
-      data: data2,
+      data: ycData,
     },
   ],
 })

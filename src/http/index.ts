@@ -1,7 +1,7 @@
 import instance from './instance'
 import type { Coord } from '@/types/http'
 import type { LocationGeoRes } from '@/types/geoInfo.d.ts'
-import type { LocationBaseElementRes, LocationLifeIndexRes } from '@/types/weaInfo.d.ts'
+import type { LocationBaseElementRes, LocationEleDetailRes, LocationLifeIndexRes } from '@/types/weaInfo.d.ts'
 import type { LocationWarnRes } from '@/types/warnInfo'
 
 export const getLocationGeo = ({ lat, lng }: Coord): Promise<LocationGeoRes> => {
@@ -29,5 +29,11 @@ export const getLocationWarning = ({ lat, lng }: Coord): Promise<LocationWarnRes
   return instance({
     method: 'GET',
     url: `/location/warninfo?lat=${lat}&lon=${lng}`,
+  })
+}
+export const getLocationEleDetail = ({ lat, lng }: Coord): Promise<LocationEleDetailRes> => {
+  return instance({
+    method: 'GET',
+    url: `/location/eledetail?lat=${lat}&lon=${lng}`,
   })
 }

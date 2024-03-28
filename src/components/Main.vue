@@ -60,7 +60,7 @@ const handleZoomend = (type: any, target: any) => {
   console.log('zoomend')
 }
 
-const location = ref({ lng: 116.4149881093699, lat: 39.89733849090521 })
+const location = ref({ lng: 116.32803, lat: 39.94851 })
 const handleClick = (type: any, target: any, point: any, pixel: any, overlay: any) => {
   console.log(type, target, point, pixel, overlay)
   console.log('click')

@@ -42,5 +42,16 @@ interface LocationLifeIndexData {
   }[]
 }
 
+interface StationData {
+  hover: string
+  list: [string, number][][]
+  value: string
+}
+interface LocationEleDetailData {
+  sk: StationData
+  yc: StationData
+}
+
 export type LocationBaseElementRes = Res<LocationBaseElementData>
 export type LocationLifeIndexRes = Res<LocationLifeIndexData>
+export type LocationEleDetailRes = Res<LocationEleDetailData>
