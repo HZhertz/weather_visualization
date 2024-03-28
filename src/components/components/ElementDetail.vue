@@ -20,78 +20,36 @@
 
 <script lang="ts" setup>
 import { computed, inject, ref, toRaw, watch } from 'vue'
-import type { Ref } from 'vue'
 import { use } from 'echarts/core'
 import { CanvasRenderer } from 'echarts/renderers'
 import { LineChart } from 'echarts/charts'
 import { TooltipComponent, GridComponent, LegendComponent } from 'echarts/components'
 import VChart from 'vue-echarts'
 import MyCard from './MyCard.vue'
+import type { Ref } from 'vue'
 import type { ProxyCoord } from '@/types/http'
-import { getLocationEleDetail } from '@/http'
 import type { LocationEleDetailData } from '@/types/weaInfo'
+import { getLocationEleDetail } from '@/http'
 import { formatLineChartTime } from '@/utils'
 import { ED } from '@/assets/ts'
 
 use([CanvasRenderer, LineChart, TooltipComponent, GridComponent, LegendComponent])
 
-// let items = ['气温', '气压', '相对湿度', '极大风', '降水']
-
-// const ED = [
-//   {
-//     fastEle: 'TEM',
-//     type: '气温',
-//     name: '温度',
-//     unit: '℃',
-//   },
-//   {
-//     fastEle: 'PRS',
-//     type: '气压',
-//     name: '气压',
-//     unit: 'hPa',
-//   },
-//   {
-//     fastEle: 'RHU',
-//     type: '相对湿度',
-//     name: '湿度',
-//     unit: '%',
-//   },
-//   {
-//     fastEle: 'WINS',
-//     type: '极大风',
-//     name: '风速',
-//     unit: 'm/s',
-//   },
-//   {
-//     fastEle: 'PRE',
-//     type: '降水',
-//     name: '降水',
-//     unit: 'mm',
-//   },
-// ]
 const selectedIndex = ref(0)
-// const eType = ref({})
 const handleClick = (e: any) => {
   let target = e.target
   if (target.tagName.toLowerCase() === 'span') {
     selectedIndex.value = parseInt(target.dataset.index)
-    // eType.value = ED[parseInt(target.dataset.index)]
   }
   console.log(e)
 }
 const eType = computed(() => {
   return ED[selectedIndex.value]
 })
-watch(
-  () => eType.value,
-  (newVal, oldVal) => {
-    console.log(newVal, oldVal)
-  }
-)
 
 const location = inject<Ref<ProxyCoord>>('location')
-if (!location?.value) {
-  throw new Error('Location is not provided')
+if (!location) {
+  throw new Error('Location maybe not provided')
 }
 const pointParams = computed(() => {
   return toRaw(location.value)
@@ -108,14 +66,9 @@ const getLocationEleDetailInfo = async () => {
   })
 }
 
-watch(
-  () => location.value,
-  (newVal) => {
-    if (newVal) {
-      getLocationEleDetailInfo()
-    }
-  }
-)
+watch(location, () => {
+  getLocationEleDetailInfo()
+})
 
 const yName = computed(() => {
   return eType.value.name + '(' + eType.value.unit + ')'
@@ -139,10 +92,10 @@ const ycData = computed(() => {
 
 const option = ref({
   grid: {
-    left: '35',
-    right: '5',
-    top: '30',
-    bottom: '25',
+    left: '15%',
+    right: '8%',
+    top: '20%',
+    bottom: '15%',
   },
   xAxis: {
     type: 'category',

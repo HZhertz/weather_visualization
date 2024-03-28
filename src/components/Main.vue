@@ -10,8 +10,6 @@
       :scroll-wheel-zoom="true"
       :mapStyle="mapStyle"
       @click="handleClick"
-      @zoomstart="handleZoomstart"
-      @zoomend="handleZoomend"
     >
       <bm-marker
         :position="location"
@@ -51,15 +49,6 @@ const mapStyle = ref({
   styleId: 'f336be4c92fa3f2601f0298d5fa7aca8',
 })
 
-const handleZoomstart = (type: any, target: any) => {
-  console.log(type, target)
-  console.log('zoomstart')
-}
-const handleZoomend = (type: any, target: any) => {
-  console.log(type, target)
-  console.log('zoomend')
-}
-
 const location = ref({ lng: 116.32803, lat: 39.94851 })
 const handleClick = (type: any, target: any, point: any, pixel: any, overlay: any) => {
   console.log(type, target, point, pixel, overlay)
@@ -68,8 +57,7 @@ const handleClick = (type: any, target: any, point: any, pixel: any, overlay: an
   console.log(location.value)
 }
 
-const handleLocationSuccess = (point: any, AddressComponent: any, marker: any) => {
-  console.log(point, AddressComponent, marker)
+const handleLocationSuccess = (point: any) => {
   location.value = point.point
 }
 

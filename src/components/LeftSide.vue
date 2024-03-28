@@ -93,21 +93,24 @@
           </div>
           <div class="warn-info">
             <MyCard title="预警信息">
-              <div class="warn-item" v-for="item in warnInfoList" key="item.dataid">
-                <div class="warn-title">{{ item.warnDefine.typeName }}预警</div>
-                <div class="warn-sender">
-                  <span>{{ item.sender }} {{ item.time }}</span>
+              <template v-if="warnInfoList.length === 0">
+                <div class="non-warn">当前没有预警</div>
+              </template>
+              <template v-else>
+                <div class="warn-item" v-for="item in warnInfoList" key="item.dataid">
+                  <div class="warn-title">{{ item.warnDefine.typeName }}预警</div>
+                  <div class="warn-sender">
+                    <span>{{ item.sender }} {{ item.time }}</span>
+                  </div>
+                  <div class="warn-content">
+                    {{ item.issuecontent }}
+                  </div>
                 </div>
-                <div class="warn-content">
-                  {{ item.issuecontent }}
-                </div>
-              </div>
+              </template>
             </MyCard>
           </div>
           <ElementDetail />
-          <div class="air-quality">
-            <MyCard title="空气质量"></MyCard>
-          </div>
+          <AirQuality />
         </div>
       </MyScroll>
     </div>
@@ -125,11 +128,11 @@ import { getImageUrl, formatVis, formatPre } from '@/utils'
 import MyScroll from './components/MyScroll.vue'
 import MyCard from './components/MyCard.vue'
 import ElementDetail from './components/ElementDetail.vue'
+import AirQuality from './components/AirQuality.vue'
 
 const location = inject<Ref<ProxyCoord>>('location')
-console.log(location)
-if (!location?.value) {
-  throw new Error('Location is not provided')
+if (!location) {
+  throw new Error('Location maybe not provided')
 }
 const pointParams = computed(() => {
   return toRaw(location.value)
@@ -226,17 +229,12 @@ const getLocationWarningInfo = async () => {
   warnInfoList.value = res.data
 }
 
-watch(
-  () => location.value,
-  (newVal) => {
-    if (newVal) {
-      getLocationGeoInfo()
-      getLocationBaseEleInfo()
-      getLocationLifeIndexInfo()
-      getLocationWarningInfo()
-    }
-  }
-)
+watch(location, () => {
+  getLocationGeoInfo()
+  getLocationBaseEleInfo()
+  getLocationLifeIndexInfo()
+  getLocationWarningInfo()
+})
 </script>
 <style lang="scss" scoped>
 .side {
@@ -466,6 +464,15 @@ watch(
       }
     }
     .warn-info {
+      .non-warn,
+      .warn-content {
+        margin-top: 4px;
+        font-size: 12px;
+        line-height: 22px;
+        text-align: left;
+        text-indent: 10px;
+        margin-bottom: 10px;
+      }
       .warn-item {
         padding: 0 10px;
         .warn-title {
@@ -493,18 +500,8 @@ watch(
           padding-left: 10px;
           border-bottom: 0.5px solid #e8e8ea;
         }
-        .warn-content {
-          margin-top: 4px;
-          font-size: 12px;
-          line-height: 22px;
-          text-align: left;
-          text-indent: 10px;
-
-          margin-bottom: 10px;
-        }
       }
     }
-   
   }
 }
 </style>
