@@ -98,7 +98,7 @@
               </template>
               <template v-else>
                 <div class="warn-item" v-for="item in warnInfoList" key="item.dataid">
-                  <div class="warn-title">{{ item.warnDefine.typeName }}预警</div>
+                  <div class="warn-title">{{ item.codename }}{{ item.signallevel }}预警</div>
                   <div class="warn-sender">
                     <span>{{ item.sender }} {{ item.time }}</span>
                   </div>

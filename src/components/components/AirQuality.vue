@@ -6,13 +6,13 @@
       </div>
       <div class="aqi-list-wrap">
         <div class="aqis">
-          <div class="item">
-            <div class="value"></div>
-            <div class="color"></div>
-            <div class="type"></div>
+          <div class="item" v-for="item in aqiList" key="item.name">
+            <div class="value">{{ item.value }}</div>
+            <div class="color" :style="{ backgroundColor: item.color }"></div>
+            <div class="type">{{ item.name }}</div>
           </div>
         </div>
-        <div class="upd-time"></div>
+        <div class="upd-time">更新时间:{{ updTime }}</div>
       </div>
     </MyCard>
   </div>
@@ -27,7 +27,9 @@ import MyCard from './MyCard.vue'
 import { Ref, computed, inject, ref, toRaw, watch } from 'vue'
 import { ProxyCoord } from '@/types/http'
 import { getLocationAqiQuality } from '@/http'
-import { AQI } from '@/assets/ts'
+import { AQI, BC } from '@/assets/ts'
+import { getColor } from '@/utils'
+import type { AqisData } from '@/types/aqiInfo'
 
 use([CanvasRenderer, GaugeChart])
 
@@ -39,47 +41,63 @@ const pointParams = computed(() => {
   return toRaw(location.value)
 })
 
-interface AqiData {
-  [key: string]: string
+interface ListItem {
+  name: string
+  value: string
+  color: string
 }
-const aqiList = ref<AqiData>({})
+const aqiList = ref<ListItem[]>([])
+const aqiData = ref<AqisData>()
+const updTime = ref('')
 const getLocationAqiQualityInfo = async () => {
   const res = await getLocationAqiQuality(pointParams.value)
   console.log(res)
-  const aqiData: AqiData = res.data.data
-  AQI.map((item) => {
-    aqiList.value[item.name] = parseFloat(aqiData[item.key]).toString()
-  })
+  aqiData.value = res.data.data
+  if (aqiData.value) {
+    AQI.map((item) => {
+      const data = {
+        name: item.name,
+        value: parseFloat(aqiData.value![item.key]).toString(),
+        color: getColor(parseFloat(aqiData.value![item.key])),
+      }
+      aqiList.value.push(data)
+    })
+  }
+
+  updTime.value = res.data.data.D_DATETIME
 }
 
 watch(location, () => {
+  aqiList.value = []
   getLocationAqiQualityInfo()
 })
 
-const aqiData = [
-  {
-    value: 367,
-    name: '严重污染',
-  },
-]
+const gaugeData = computed(() => {
+  if (aqiData.value) {
+    return [
+      {
+        value: parseFloat(aqiData.value.V_AQI),
+        name: aqiData.value.V_QUAL,
+      },
+    ]
+  } else {
+    return [
+      {
+        value: 0,
+        name: '———',
+      },
+    ]
+  }
+})
 
-// 基准数组
-const baseColor: [number, string][] = [
-  [0.1, '#08e508'],
-  [0.2, '#ffff08'],
-  [0.3, '#ff8208'],
-  [0.4, '#ff0808'],
-  [0.5, '#9c0852'],
-  [1, '#8b2c47'],
-]
-
-const axisLineColor = () => {
+const axisLineColor = computed(() => {
   // 计算当前值相对于最大值的比例
-  const ratio = aqiData[0].value / 800
-  const color = baseColor.find((item) => {
+  const ratio = gaugeData.value[0].value / 800
+  console.log(ratio)
+  const color = BC.find((item) => {
     return item[0] >= ratio
   })
-  const arr = baseColor.filter((item) => {
+  const arr = BC.filter((item) => {
     return item[0] < ratio
   })
   if (color) {
@@ -87,7 +105,7 @@ const axisLineColor = () => {
   } else {
     return [...arr, [1, '#f3f5f7']]
   }
-}
+})
 
 const option = ref({
   series: [
@@ -103,7 +121,7 @@ const option = ref({
       axisLine: {
         lineStyle: {
           width: 0,
-          color: axisLineColor(),
+          color: axisLineColor,
         },
       },
       splitLine: {
@@ -133,7 +151,7 @@ const option = ref({
         valueAnimation: true,
         color: '#47555d',
       },
-      data: aqiData,
+      data: gaugeData,
     },
   ],
 })
@@ -144,6 +162,41 @@ const option = ref({
   margin: 0 10px;
   .charts {
     height: 100%;
+  }
+}
+.aqi-list-wrap {
+  margin: 0 5px;
+  text-align: center;
+  .aqis {
+    height: 50px;
+    display: flex;
+    justify-content: space-around;
+    .item {
+      .value {
+        font-size: 14px;
+        line-break: 30px;
+        font-weight: 600;
+        color: #585858;
+      }
+      .color {
+        width: 10px;
+        height: 10px;
+        border-radius: 7.5px;
+        margin: 0 auto;
+      }
+      .type {
+        font-size: 12px;
+        color: #b6b6b6;
+        line-height: 27px;
+      }
+    }
+  }
+  .upd-time {
+    margin: 10px 0;
+    font-size: 12px;
+    color: #585858;
+    font-weight: 400;
+    vertical-align: baseline;
   }
 }
 </style>

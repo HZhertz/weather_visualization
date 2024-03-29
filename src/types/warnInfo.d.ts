@@ -8,7 +8,7 @@ interface LocationWarnData {
   lon: number
   zoom: number
   issuecontent: string
-  warnDefine: {
+  warnDefine?: {
     id: number
     typeName: string
     typecode: string
