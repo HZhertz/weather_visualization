@@ -19,7 +19,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, inject, ref, toRaw, watch } from 'vue'
+import { computed, inject, onMounted, ref, toRaw, watch } from 'vue'
 import { use } from 'echarts/core'
 import { CanvasRenderer } from 'echarts/renderers'
 import { LineChart } from 'echarts/charts'
@@ -66,9 +66,16 @@ const getLocationEleDetailInfo = async () => {
   })
 }
 
-watch(location, () => {
+onMounted(() => {
   getLocationEleDetailInfo()
-})
+}),
+  watch(
+    location,
+    () => {
+      getLocationEleDetailInfo()
+    },
+    { deep: true }
+  )
 
 const yName = computed(() => {
   return eType.value.name + '(' + eType.value.unit + ')'

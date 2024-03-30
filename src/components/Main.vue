@@ -4,32 +4,40 @@
       <el-amap-layer-tile
         tile-url="https://f.sat.owm.io/vane/2.0/weather/PA0/[z]/[x]/[y]?appid=9de243494c0b295cca9337e1e96b00e2&date=1711768876&palette=0.1:b5f7a6;0.2:6bc769;0.5:88c5f9;1:3a3bfa;10:f33efa;140:a4407a"
       />
+
+      <el-amap-control-scale />
+      <el-amap-control-tool-bar />
+      <el-amap-control-geolocation @complete="handleLocationSuccess" />
+      <el-amap-marker :position="[location.lng, location.lat]" :icon="getImageUrl('banglocation.png')" />
     </el-amap>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue'
+import { ProxyCoord } from '@/types/http'
+import { ref, inject, Ref } from 'vue'
+import { getImageUrl } from '@/utils'
 
 // const mapStyle = ref({
 //   styleId: 'f336be4c92fa3f2601f0298d5fa7aca8',
 // })
 
-const location = ref({ lng: 116.32803, lat: 39.94851 })
+const location = inject<Ref<ProxyCoord>>('location')
+if (!location) {
+  throw new Error('Location maybe not provided')
+}
+
 const handleClick = (e: any) => {
   console.log(e)
   location.value.lng = e.lnglat.lng
   location.value.lat = e.lnglat.lat
-  console.log(location.value)
 }
 
-// const handleLocationSuccess = (point: any) => {
-//   location.value = point.point
-// }
-
-defineExpose({
-  location,
-})
+const handleLocationSuccess = (statue: any) => {
+  console.log(statue)
+  location.value.lat = statue.position.lat
+  location.value.lng = statue.position.lng
+}
 </script>
 <style lang="scss" scoped>
 .main {

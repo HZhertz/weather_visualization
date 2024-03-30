@@ -1,0 +1,36 @@
+.amap-scalecontrol {
+	position: absolute;
+	left: 430px !important;
+
+	.amap-scale-text {
+		font-size: 16px;
+	}
+}
+
+.amap-toolbar {
+	position: absolute;
+	left: 430px !important;
+	bottom: 100px !important;
+	width: 40px;
+}
+
+.amap-geolocation {
+	position: absolute;
+	left: 430px !important;
+	bottom: 200px !important;
+	border-radius: 10% !important;
+}
+
+.amap-marker {
+
+	.amap-icon {
+		overflow: visible !important;
+
+		img {
+			position: relative;
+			left: -50%;
+			top: -90%;
+			width: 30px;
+		}
+	}
+}

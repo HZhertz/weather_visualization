@@ -24,7 +24,7 @@ import { CanvasRenderer } from 'echarts/renderers'
 import { GaugeChart } from 'echarts/charts'
 import VChart from 'vue-echarts'
 import MyCard from './MyCard.vue'
-import { Ref, computed, inject, ref, toRaw, watch } from 'vue'
+import { Ref, computed, inject, onMounted, ref, toRaw, watch } from 'vue'
 import { ProxyCoord } from '@/types/http'
 import { getLocationAqiQuality } from '@/http'
 import { AQI, BC } from '@/assets/ts'
@@ -67,10 +67,17 @@ const getLocationAqiQualityInfo = async () => {
   updTime.value = res.data.data.D_DATETIME
 }
 
-watch(location, () => {
-  aqiList.value = []
-  getLocationAqiQualityInfo()
-})
+onMounted(() => {
+	getLocationAqiQualityInfo()
+}),
+watch(
+  location,
+  () => {
+    aqiList.value = []
+    getLocationAqiQualityInfo()
+  },
+  { deep: true }
+)
 
 const gaugeData = computed(() => {
   if (aqiData.value) {

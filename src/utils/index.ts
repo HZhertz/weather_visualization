@@ -8,7 +8,7 @@ export const formatVis = (visString: string) => {
   return (Number(visString) / 1000).toFixed(1)
 }
 export const formatPre = (preString: string) => {
-  return Number(preString).toFixed(1)
+  return Number(preString) < 0 ? 0 : Number(preString).toFixed(1)
 }
 
 export const formatLineChartTime = (arr: [string, number][]) => {
