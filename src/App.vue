@@ -12,22 +12,26 @@
 </template>
 
 <script setup lang="ts">
-import { provide, ref, watchEffect } from 'vue'
+import { provide, ref, watch, watchEffect } from 'vue'
 import Header from './components/Header.vue'
 import LeftSide from './components/LeftSide.vue'
 import Main from './components/Main.vue'
 import RightMenu from './components/RightMenu.vue'
 import type { MianInstance } from '@/types/component.d.ts'
+import { Coord } from './types/http'
 
 const mainRef = ref<MianInstance>()
-const location = ref({})
+const $mianRef = mainRef.value
+const location = ref()
 
-watchEffect(() => {
-  const $mianRef = mainRef.value
-  if ($mianRef) {
-    location.value = $mianRef.location
-  }
-})
+watch(
+  () => $mianRef?.location,
+  () => {
+    console.log(mainRef.value?.location)
+    location.value = $mianRef?.location
+  },
+  { deep: true }
+)
 
 provide('location', location)
 </script>

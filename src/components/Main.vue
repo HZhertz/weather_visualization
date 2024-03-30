@@ -1,65 +1,31 @@
 <template>
   <div class="main">
-    <baidu-map
-      class="bm-view"
-      :zoom="5"
-      :min-zoom="5"
-      :max-zoom="18"
-      :map-click="true"
-      :center="{ lng: 100, lat: 40 }"
-      :scroll-wheel-zoom="true"
-      :mapStyle="mapStyle"
-      @click="handleClick"
-    >
-      <bm-marker
-        :position="location"
-        :icon="{
-          url: getImageUrl('banglocation.png'),
-          size: { width: 20, height: 46 },
-          opts: {
-            imageSize: { width: 20, height: 24 },
-          },
-        }"
-        title="location"
-        :zIndex="13373461"
-      ></bm-marker>
-
-      <bm-geolocation
-        anchor="BMAP_ANCHOR_BOTTOM_LEFT"
-        :offset="{ width: 300, height: 140 }"
-        :showAddressBar="true"
-        :autoLocation="true"
-        @locationSuccess="handleLocationSuccess"
-      ></bm-geolocation>
-      <bm-scale anchor="BMAP_ANCHOR_BOTTOM_LEFT" :offset="{ width: 300, height: 40 }"></bm-scale>
-      <bm-navigation
-        anchor="BMAP_ANCHOR_BOTTOM_LEFT"
-        :offset="{ width: 300, height: 80 }"
-        type="BMAP_NAVIGATION_CONTROL_ZOOM"
-      ></bm-navigation>
-    </baidu-map>
+    <el-amap class="gm-view" :zoom="4.5" :zooms="[4, 18]" :center="[100, 40]" @click="handleClick">
+      <el-amap-layer-tile
+        tile-url="https://f.sat.owm.io/vane/2.0/weather/PA0/[z]/[x]/[y]?appid=9de243494c0b295cca9337e1e96b00e2&date=1711768876&palette=0.1:b5f7a6;0.2:6bc769;0.5:88c5f9;1:3a3bfa;10:f33efa;140:a4407a"
+      />
+    </el-amap>
   </div>
 </template>
 
 <script lang="ts" setup>
 import { ref } from 'vue'
-import { getImageUrl } from '@/utils/index'
 
-const mapStyle = ref({
-  styleId: 'f336be4c92fa3f2601f0298d5fa7aca8',
-})
+// const mapStyle = ref({
+//   styleId: 'f336be4c92fa3f2601f0298d5fa7aca8',
+// })
 
 const location = ref({ lng: 116.32803, lat: 39.94851 })
-const handleClick = (type: any, target: any, point: any, pixel: any, overlay: any) => {
-  console.log(type, target, point, pixel, overlay)
-  console.log('click')
-  location.value = type.point
+const handleClick = (e: any) => {
+  console.log(e)
+  location.value.lng = e.lnglat.lng
+  location.value.lat = e.lnglat.lat
   console.log(location.value)
 }
 
-const handleLocationSuccess = (point: any) => {
-  location.value = point.point
-}
+// const handleLocationSuccess = (point: any) => {
+//   location.value = point.point
+// }
 
 defineExpose({
   location,
@@ -71,7 +37,8 @@ defineExpose({
   width: 100%;
   height: 100%;
   background-color: gray;
-  .bm-view {
+
+  .gm-view {
     width: 100%;
     height: 100%;
   }

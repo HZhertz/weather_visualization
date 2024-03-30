@@ -230,6 +230,7 @@ const getLocationWarningInfo = async () => {
 }
 
 watch(location, () => {
+  console.log(location.value)
   getLocationGeoInfo()
   getLocationBaseEleInfo()
   getLocationLifeIndexInfo()
