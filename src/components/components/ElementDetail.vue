@@ -47,10 +47,7 @@ const eType = computed(() => {
   return ED[selectedIndex.value]
 })
 
-const location = inject<Ref<ProxyCoord>>('location')
-if (!location) {
-  throw new Error('Location maybe not provided')
-}
+const location = inject<Ref<ProxyCoord>>('location')!
 const pointParams = computed(() => {
   return toRaw(location.value)
 })

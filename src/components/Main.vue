@@ -1,9 +1,14 @@
 <template>
   <div class="main">
-    <el-amap class="gm-view" :zoom="4.5" :zooms="[4, 18]" :center="[100, 40]" @click="handleClick">
-      <el-amap-layer-tile
-        tile-url="https://f.sat.owm.io/vane/2.0/weather/PA0/[z]/[x]/[y]?appid=9de243494c0b295cca9337e1e96b00e2&date=1711768876&palette=0.1:b5f7a6;0.2:6bc769;0.5:88c5f9;1:3a3bfa;10:f33efa;140:a4407a"
-      />
+    <el-amap
+      class="gm-view"
+      :zoom="4.5"
+      :zooms="[2, 18]"
+      :center="[100, 40]"
+      :mapStyle="mapStyle"
+      @click="handleClick"
+    >
+      <el-amap-layer-tile v-if="tileType" :tile-url="tileUrl" />
 
       <el-amap-control-scale />
       <el-amap-control-tool-bar />
@@ -15,29 +20,33 @@
 
 <script lang="ts" setup>
 import { ProxyCoord } from '@/types/http'
-import { ref, inject, Ref } from 'vue'
+import { ref, inject, Ref, computed } from 'vue'
 import { getImageUrl } from '@/utils'
+import { MT } from '@/assets/ts'
 
-// const mapStyle = ref({
-//   styleId: 'f336be4c92fa3f2601f0298d5fa7aca8',
-// })
+const mapStyle = ref('amap://styles/c7e9e9eef04db01b01a5df75f6225483')
 
-const location = inject<Ref<ProxyCoord>>('location')
-if (!location) {
-  throw new Error('Location maybe not provided')
-}
-
+const location = inject<Ref<ProxyCoord>>('location')!
 const handleClick = (e: any) => {
   console.log(e)
   location.value.lng = e.lnglat.lng
   location.value.lat = e.lnglat.lat
 }
-
 const handleLocationSuccess = (statue: any) => {
   console.log(statue)
   location.value.lat = statue.position.lat
   location.value.lng = statue.position.lng
 }
+
+const tileType = inject<Ref<string>>('tileType')!
+const tileUrl = computed(() => {
+  const result = MT.find((item) => {
+    return item.code === tileType.value
+  })
+  console.log(result)
+  let palette = result?.palette ? `&palette=${result?.palette}` : ''
+  return `https://f.sat.owm.io/vane/2.0/weather/${tileType.value}/[z]/[x]/[y]?appid=9de243494c0b295cca9337e1e96b00e2${palette}`
+})
 </script>
 <style lang="scss" scoped>
 .main {

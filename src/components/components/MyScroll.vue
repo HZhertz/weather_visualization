@@ -48,7 +48,6 @@ onMounted(() => {
   right: 0;
   left: 0;
   overflow: hidden;
-  background-color: #ffffff00;
   user-select: none;
   // .container {
   //   height: 1600px;

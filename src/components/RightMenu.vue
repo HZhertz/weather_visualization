@@ -21,17 +21,21 @@
 import MyScroll from './components/MyScroll.vue'
 import { getImageUrl } from '@/utils'
 import { MT } from '@/assets/ts'
-import { ref } from 'vue'
+import { Ref, inject, ref } from 'vue'
+
+const tileType = inject<Ref<string>>('tileType')!
 
 const selectedCode = ref('')
 const handleClick = (e: MouseEvent) => {
   console.log(e)
   const target = e.target as HTMLElement
   const menuItem = target.closest('.menu-item')
+  console.log(menuItem)
   if (menuItem) {
     const code = menuItem.getAttribute('data-code')
     if (code) {
       selectedCode.value = code
+      tileType.value = code
     }
   }
 }

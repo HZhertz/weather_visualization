@@ -20,15 +20,18 @@ import RightMenu from './components/RightMenu.vue'
 
 const location = ref({ lng: 116.32803, lat: 39.94851 })
 provide('location', location)
-
-// 检测 location 的变化需要深度监听
 // watch(
-//   location.value,
-//   (nv, ov) => {
-//     console.log(nv, ov)
+//   location,
+//   (newValue) => {
+//     console.log(newValue)
 //   },
 //   { deep: true }
 // )
+const tileType = ref('')
+provide('tileType', tileType)
+// watch(tileType, (newValue) => {
+//   console.log(newValue)
+// })
 </script>
 
 <style lang="scss" scoped>
