@@ -4,7 +4,7 @@
       <Header></Header>
     </div>
     <div class="body">
-      <Main></Main>
+      <MainMap></MainMap>
       <LeftSide></LeftSide>
       <RightMenu></RightMenu>
     </div>
@@ -15,7 +15,7 @@
 import { provide, ref } from 'vue'
 import Header from './components/Header.vue'
 import LeftSide from './components/LeftSide.vue'
-import Main from './components/Main.vue'
+import MainMap from './components/MainMap.vue'
 import RightMenu from './components/RightMenu.vue'
 
 const location = ref({ lng: 116.32803, lat: 39.94851 })

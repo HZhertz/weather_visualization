@@ -1,5 +1,5 @@
 <template>
-  <div class="main">
+  <div class="map">
     <el-amap
       class="gm-view"
       :zoom="4.5"
@@ -49,12 +49,12 @@ const tileUrl = computed(() => {
 })
 </script>
 <style lang="scss" scoped>
-.main {
+.map {
   position: absolute;
   width: 100%;
   height: 100%;
   background-color: gray;
-
+  z-index: 0;
   .gm-view {
     width: 100%;
     height: 100%;

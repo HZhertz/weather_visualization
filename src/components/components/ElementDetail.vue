@@ -36,12 +36,14 @@ import { ED } from '@/assets/ts'
 use([CanvasRenderer, LineChart, TooltipComponent, GridComponent, LegendComponent])
 
 const selectedIndex = ref(0)
-const handleClick = (e: any) => {
-  let target = e.target
-  if (target.tagName.toLowerCase() === 'span') {
-    selectedIndex.value = parseInt(target.dataset.index)
+const handleClick = (e: MouseEvent) => {
+  let target = e.target as HTMLElement | null
+  if (target && target.tagName.toLowerCase() === 'span') {
+    let index = target.dataset.index
+    if (index) {
+      selectedIndex.value = parseInt(index)
+    }
   }
-  console.log(e)
 }
 const eType = computed(() => {
   return ED[selectedIndex.value]
@@ -231,3 +233,4 @@ const option = ref({
   }
 }
 </style>
+@/http/api

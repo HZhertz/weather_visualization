@@ -68,16 +68,16 @@ const getLocationAqiQualityInfo = async () => {
 }
 
 onMounted(() => {
-	getLocationAqiQualityInfo()
+  getLocationAqiQualityInfo()
 }),
-watch(
-  location,
-  () => {
-    aqiList.value = []
-    getLocationAqiQualityInfo()
-  },
-  { deep: true }
-)
+  watch(
+    location,
+    () => {
+      aqiList.value = []
+      getLocationAqiQualityInfo()
+    },
+    { deep: true }
+  )
 
 const gaugeData = computed(() => {
   if (aqiData.value) {
@@ -207,3 +207,4 @@ const option = ref({
   }
 }
 </style>
+@/http/api
