@@ -60,5 +60,8 @@ export const getScatterColor = (val: number, valArr: number[], colorArr: string[
   const index = valArr.findIndex((item) => {
     return item >= val
   })
+  if (index === -1) {
+    return colorArr.at(-1)
+  }
   return colorArr[index]
 }

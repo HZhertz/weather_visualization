@@ -46,7 +46,7 @@ const handleClick = (e: MouseEvent) => {
   right: 0;
   bottom: 0;
   top: 0;
-  width: 180px;
+  width: 200px;
   background-color: #cbd4e28a;
   .menu-item {
     display: flex;
