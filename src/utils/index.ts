@@ -1,7 +1,7 @@
 import { BC } from '@/assets/ts'
 
 export const getImageUrl = (path: String) => {
-  console.log(new URL(`../assets/img/${path}`, import.meta.url).href)
+  // console.log(new URL(`../assets/img/${path}`, import.meta.url).href)
   return new URL(`../assets/img/${path}`, import.meta.url).href
 }
 export const formatVis = (visString: string) => {

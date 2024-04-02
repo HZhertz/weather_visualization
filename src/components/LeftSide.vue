@@ -132,7 +132,6 @@ import AirQuality from './components/AirQuality.vue'
 
 const location = inject<Ref<ProxyCoord>>('location')!
 
-
 watch(
   location,
   (nv, ov) => {
@@ -141,10 +140,8 @@ watch(
   { deep: true }
 )
 const pointParams = computed(() => {
-  console.log('>>>')
   return toRaw(location.value)
 })
-console.log(pointParams.value)
 
 // 获取地理信息与天气
 const weatherType = ref('0')

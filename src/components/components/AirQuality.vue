@@ -100,7 +100,6 @@ const gaugeData = computed(() => {
 const axisLineColor = computed(() => {
   // 计算当前值相对于最大值的比例
   const ratio = gaugeData.value[0].value / 800
-  console.log(ratio)
   const color = BC.find((item) => {
     return item[0] >= ratio
   })

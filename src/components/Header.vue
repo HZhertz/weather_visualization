@@ -1,7 +1,8 @@
 <template>
   <div class="header">
     <div class="logo-img">
-      <img src="@/assets/img/hlogo.png" alt="" />
+      <img src="@/assets/img/logo.png" alt="" />
+      全国气象实况可视化
     </div>
     <div class="search">
       <input
@@ -81,9 +82,14 @@ onMounted(() => {
   overflow: visible;
 
   .logo-img {
+    font-size: 30px;
+    font-weight: 700;
+    color: $green-g;
+    margin: auto 0;
     img {
-      height: 48px;
-      margin-left: 50px;
+      height: 40px;
+      margin-left: 15px;
+      margin-right: 15px;
     }
   }
 

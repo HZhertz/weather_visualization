@@ -2,9 +2,9 @@
   <div class="map">
     <el-amap
       class="gm-view"
-      :zoom="4.5"
-      :zooms="[2, 18]"
-      :center="[100, 40]"
+      :zoom="4.8"
+      :zooms="[3.5, 18]"
+      :center="[104, 37]"
       :mapStyle="mapStyle"
       @click="handleClick"
     >
@@ -35,16 +35,24 @@
 import { ref, inject, Ref, computed, watchEffect } from 'vue'
 import { ProxyCoord } from '@/types/http'
 import { getImageUrl, getColor, convertToGeoJSON } from '@/utils'
+import { getAqiScatter } from '@/http'
 import { MT } from '@/assets/ts'
 import MyInfoWindow from './components/MyInfoWindow.vue'
 
-const mapStyle = ref('amap://styles/c7e9e9eef04db01b01a5df75f6225483')
+const location = inject<Ref<ProxyCoord>>('location')!
+const menuCode = inject<Ref<string>>('menuCode')!
+
+const mapStyle = computed(() => {
+  if (['CL'].includes(menuCode.value)) {
+    return 'amap://styles/grey'
+  }
+  return 'amap://styles/fresh'
+})
 
 const visible = ref(false)
 const infoPoint = ref([120, 31])
 const infoContent = ref<string[]>([])
 
-const location = inject<Ref<ProxyCoord>>('location')!
 const handleClick = (e: any) => {
   console.log(e)
   location.value.lng = e.lnglat.lng
@@ -56,7 +64,6 @@ const handleLocationSuccess = (statue: any) => {
   location.value.lng = statue.position.lng
 }
 
-const menuCode = inject<Ref<string>>('menuCode')!
 const menuItem = computed(() => {
   return MT.find((item) => {
     return item.code === menuCode.value
@@ -72,48 +79,19 @@ watchEffect(() => {
       tileUrl.value = `https://f.sat.owm.io/vane/2.0/weather/${menuCode.value}/[z]/[x]/[y]?appid=9de243494c0b295cca9337e1e96b00e2${palette}`
     }
     if (layerType.value === 'scatter') {
+      getAqiScatterInfo()
     }
   }
 })
 
-const data = ref([
-  {
-    unit: '-',
-    code: '110000',
-    province: '999998',
-    city: '北京市',
-    name: '万寿西宫',
-    lon: 116.3621,
-    id: '1001A',
-    value: 93,
-    lat: 39.8784,
-  },
-  {
-    unit: '-',
-    code: '110000',
-    province: '999998',
-    city: '北京市',
-    name: '东四',
-    lon: 116.4174,
-    id: '1003A',
-    value: 101,
-    lat: 39.9289,
-  },
-  {
-    unit: '-',
-    code: '110000',
-    province: '999998',
-    city: '北京市',
-    name: '天坛',
-    lon: 116.4072,
-    id: '1004A',
-    value: 85,
-    lat: 39.8863,
-  },
-])
-const geoData = convertToGeoJSON(data.value)
+const geoData = ref({})
+const getAqiScatterInfo = async () => {
+  const res = await getAqiScatter(menuCode.value)
+  console.log(res)
+  geoData.value = convertToGeoJSON(res.data)
+}
 const layerStyle = ref({
-  radius: 6,
+  radius: 5,
   borderWidth: 0,
   color: (_: any, f: any) => {
     return getColor(f.properties.value)
@@ -126,7 +104,7 @@ const handleMousemove = (f: any, e: any) => {
     // console.log(f, e)
     visible.value = true
     infoPoint.value = f.coordinates
-    infoContent.value = [f.properties.name, f.properties.value] as string[]
+    infoContent.value = [f.properties.name, f.properties.value]
     bordercolor.value = getColor(f.properties.value)
   }
 }

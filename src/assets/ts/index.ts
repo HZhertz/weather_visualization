@@ -203,5 +203,5 @@ export const MT = [
   },
   { type: 'tiles', name: '云量', unit: '%', code: 'CL', icon: 'cloud', palette: '' },
   { type: 'tiles', name: '气压', unit: 'hPa', code: 'APM', icon: 'pressure', palette: '' },
-	{ type: 'scatter', name: '空气质量', unit: '', code: 'AQI', icon: 'aqiValue', palette: '' },
+  { type: 'scatter', name: '空气质量', unit: '', code: 'V_AQI', icon: 'aqiValue', palette: '' },
 ]
