@@ -9,40 +9,45 @@
         class="search-input"
         placeholder="搜索国内城市"
         v-model="searchKey"
-        @focus="showSuggest"
-        @blur="delayHideSuggest"
+        @click="
+          () => {
+            isSuggestVisible = !isSuggestVisible
+          }
+        "
       />
       <div class="search-suggest" v-show="isSuggestVisible">
-        <div class="hot-citys">
+        <div class="hot-citys" v-if="!searchKey">
           <div class="title">热门城市</div>
           <div class="citys" @click="chooseCity">
             <span class="item" v-for="item in hotCitysList" :data-info="item">{{ item[2] }}</span>
           </div>
         </div>
-        <div class="res-list"></div>
+        <div class="suggest-list" v-else>
+          <MyScroll>
+            <div class="list" @click="chooseAddress">
+              <div class="item" v-for="item in suggestList" :data-location="item.location">
+                <p class="name">{{ item.name }}</p>
+                <p class="district">{{ item.district }}</p>
+              </div>
+            </div>
+          </MyScroll>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { Ref, inject, onMounted, ref } from 'vue'
-import { getSearchHotCitys } from '@/http'
-import { SearchHotCitysData } from '@/types/searchInfo'
+import { Ref, inject, onMounted, ref, watchEffect } from 'vue'
+import { getSearchHotCitys, getSearchSuggest } from '@/http'
+import { SearchHotCitysData, SearchSuggestData } from '@/types/searchInfo'
 import { ProxyCoord } from '@/types/http'
+import MyScroll from './components/MyScroll.vue'
+
+const location = inject<Ref<ProxyCoord>>('location')!
 
 const searchKey = ref('')
-
 const isSuggestVisible = ref(false)
-const showSuggest = () => {
-  isSuggestVisible.value = true
-}
-let hideSuggestTimeout: NodeJS.Timeout
-const delayHideSuggest = () => {
-  hideSuggestTimeout = setTimeout(() => {
-    isSuggestVisible.value = false
-  }, 300)
-}
 
 const hotCitysList = ref<SearchHotCitysData>([])
 const getSearchHotCitysInfo = async () => {
@@ -51,7 +56,6 @@ const getSearchHotCitysInfo = async () => {
   hotCitysList.value = res.data
 }
 
-const location = inject<Ref<ProxyCoord>>('location')!
 const chooseCity = (e: MouseEvent) => {
   console.log(e)
   let target = e.target as HTMLElement | null
@@ -62,14 +66,42 @@ const chooseCity = (e: MouseEvent) => {
       location.value.lng = parseInt(info[1])
     }
   }
-  if (hideSuggestTimeout) {
-    clearTimeout(hideSuggestTimeout)
+  isSuggestVisible.value = false
+}
+
+const chooseAddress = (e: MouseEvent) => {
+  console.log(e)
+  const target = e.target as HTMLElement
+  const item = target.closest('.item')
+  if (item) {
+    console.dir(item)
+    const loca = item.getAttribute('data-location')
+    console.log(loca)
+    if (loca) {
+      const lArr = loca.split(',')
+      console.log(lArr)
+      location.value.lng = parseInt(lArr[0])
+      location.value.lat = parseInt(lArr[1])
+    }
   }
   isSuggestVisible.value = false
 }
 
 onMounted(() => {
   getSearchHotCitysInfo()
+})
+
+const suggestList = ref<SearchSuggestData>([])
+const getSearchSuggestInfo = async () => {
+  const res = await getSearchSuggest(searchKey.value)
+  console.log(res)
+  suggestList.value = res.data
+}
+watchEffect(() => {
+  if (searchKey.value) {
+    console.log(searchKey.value)
+    getSearchSuggestInfo()
+  }
 })
 </script>
 <style lang="scss" scoped>
@@ -99,7 +131,7 @@ onMounted(() => {
     .search-input {
       width: 400px;
       height: 36px;
-      margin: 7px 180px 7px 0;
+      margin: 7px 200px 7px 0;
       padding: 5px 10px;
       font-size: 16px;
       color: #444;
@@ -114,7 +146,7 @@ onMounted(() => {
       position: absolute;
       top: 49px;
       width: 400px;
-      height: 360px;
+      height: 370px;
       border: 1px solid #e5e5e5;
       background-color: #ffffff;
       z-index: 5;
@@ -144,6 +176,32 @@ onMounted(() => {
             border-radius: 2px;
             border: none;
             background: #f7f7f7;
+          }
+        }
+      }
+      .suggest-list {
+        .list {
+          position: relative;
+          top: 0;
+          left: 0;
+          margin: 0;
+          padding: 0 20px;
+          max-height: 400px;
+          background: #fff;
+          text-align: left;
+
+          .item {
+            padding: 10px 0;
+            border-bottom: 1px solid #e5e5e5;
+            cursor: pointer;
+            .name {
+              font-size: 15px;
+            }
+            .district {
+              color: #666;
+              font-size: 13px;
+              padding-top: 5px;
+            }
           }
         }
       }

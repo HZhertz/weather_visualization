@@ -11,4 +11,5 @@ export type Res<Data> = {
   type: string
   message: string
   data: Data
+  count?: string
 }
