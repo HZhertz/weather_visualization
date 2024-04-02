@@ -34,9 +34,9 @@
 <script lang="ts" setup>
 import { ref, inject, Ref, computed, watchEffect } from 'vue'
 import { ProxyCoord } from '@/types/http'
-import { getImageUrl, getColor, convertToGeoJSON } from '@/utils'
+import { getImageUrl, getColor, convertToGeoJSON, getScatterColor } from '@/utils'
 import { getAqiScatter } from '@/http'
-import { MT } from '@/assets/ts'
+import { MT, CS } from '@/assets/ts'
 import MyInfoWindow from './components/MyInfoWindow.vue'
 
 const location = inject<Ref<ProxyCoord>>('location')!
@@ -94,7 +94,7 @@ const layerStyle = ref({
   radius: 5,
   borderWidth: 0,
   color: (_: any, f: any) => {
-    return getColor(f.properties.value)
+    return getScatterColor(f.properties.value, CS[menuCode.value].value, CS[menuCode.value].color)
   },
 })
 console.log(geoData)

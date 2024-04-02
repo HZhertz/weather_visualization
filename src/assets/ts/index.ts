@@ -78,7 +78,7 @@ export const BC: [number, string][] = [
   [1, '#8b2c47'],
 ]
 // 颜色刻度
-const CS = {
+export const CS = {
   DEG: {
     name: '摄氏度',
     unit: '°C',
@@ -127,6 +127,14 @@ const CS = {
     type: 'PRE',
     value: [0, 20, 40, 60, 70, 80, 90, 100],
     color: ['#f56269', '#f3d269', '#90f769', '#5ef396', '#5ef3f6', '#5dd2f9', '#779bf8', '#5b5ef5'],
+  },
+  V_AQI: {
+    name: '空气质量',
+    unit: '',
+    type: 'V_AQI',
+    value: [50, 100, 150, 200, 250, 500],
+    text: [50, 100, 150, 200, 250, 500],
+    color: ['#26b086', '#edc444', '#f19e2e', '#175f5f', '#9959ba', '#8b2c47'],
   },
 }
 // 菜单项

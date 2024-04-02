@@ -55,3 +55,10 @@ export const convertToGeoJSON = (data: any) => {
     })),
   }
 }
+
+export const getScatterColor = (val: number, valArr: number[], colorArr: string[]) => {
+  const index = valArr.findIndex((item) => {
+    return item >= val
+  })
+  return colorArr[index]
+}
