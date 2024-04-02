@@ -33,3 +33,25 @@ export const getColor = (value: number) => {
     return BC[5][1]
   }
 }
+
+export const convertToGeoJSON = (data: any) => {
+  return {
+    type: 'FeatureCollection',
+    features: data.map((item: any) => ({
+      type: 'Feature',
+      properties: {
+        unit: item.unit,
+        code: item.code,
+        province: item.province,
+        city: item.city,
+        name: item.name,
+        id: item.id,
+        value: item.value,
+      },
+      geometry: {
+        type: 'Point',
+        coordinates: [item.lon, item.lat],
+      },
+    })),
+  }
+}

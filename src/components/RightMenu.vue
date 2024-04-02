@@ -23,7 +23,7 @@ import { getImageUrl } from '@/utils'
 import { MT } from '@/assets/ts'
 import { Ref, inject, ref } from 'vue'
 
-const tileType = inject<Ref<string>>('tileType')!
+const menuCode = inject<Ref<string>>('menuCode')!
 
 const selectedCode = ref('')
 const handleClick = (e: MouseEvent) => {
@@ -35,7 +35,7 @@ const handleClick = (e: MouseEvent) => {
     const code = menuItem.getAttribute('data-code')
     if (code) {
       selectedCode.value = code
-      tileType.value = code
+      menuCode.value = code
     }
   }
 }

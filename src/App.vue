@@ -27,9 +27,9 @@ provide('location', location)
 //   },
 //   { deep: true }
 // )
-const tileType = ref('')
-provide('tileType', tileType)
-// watch(tileType, (newValue) => {
+const menuCode = ref('')
+provide('menuCode', menuCode)
+// watch(menuCode, (newValue) => {
 //   console.log(newValue)
 // })
 </script>

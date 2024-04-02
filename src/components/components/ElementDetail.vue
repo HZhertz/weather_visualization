@@ -227,10 +227,9 @@ const option = ref({
   .history-echart {
     height: 200px;
     margin: 10px 10px;
-    .charts {
+    .chart {
       height: 100%;
     }
   }
 }
 </style>
-@/http/api
