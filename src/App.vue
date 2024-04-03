@@ -18,7 +18,7 @@ import LeftSide from './components/LeftSide.vue'
 import MainMap from './components/MainMap.vue'
 import RightMenu from './components/RightMenu.vue'
 
-const location = ref({ lng: 116.32803, lat: 39.94851 })
+const location = ref({ lng: 116.391512, lat: 39.905822 })
 provide('location', location)
 // watch(
 //   location,

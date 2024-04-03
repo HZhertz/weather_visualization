@@ -4,7 +4,7 @@
       <div class="weather-icon">
         <img :src="getImageUrl('weather_icon/' + weatherType + '.png')" alt="" />
       </div>
-      <div class="city-name" :title="formatAddress">{{ address }}</div>
+      <div class="city-name" :title="address">{{ address }}</div>
     </div>
     <div class="inner-padding">
       <MyScroll>
@@ -23,12 +23,12 @@
               </div>
             </div>
             <div class="icon-info">
-              <div class="item tcdc" v-if="weaEle.tcdc">
+              <div class="item tcdc">
                 <div class="icon"></div>
                 <div class="top-text">总云量</div>
-                <div class="bottom-text">{{ weaEle.tcdc }}%</div>
+                <div class="bottom-text">{{ weaEle.tcdc || '--' }}%</div>
               </div>
-              <div class="item vis" v-if="weaEle.vis">
+              <div class="item vis">
                 <div class="icon"></div>
                 <div class="top-text">能见度</div>
                 <div class="bottom-text">{{ formatVis(weaEle.vis) }}km</div>
@@ -38,10 +38,10 @@
                 <div class="top-text">空气质量</div>
                 <div class="bottom-text">轻度污染</div>
               </div>
-              <div class="item uvi" v-if="weaEle.uvi">
+              <div class="item uvi">
                 <div class="icon"></div>
                 <div class="top-text">紫外线指数</div>
-                <div class="bottom-text">{{ weaEle.uvi }} {{ weaEle.uvi_strength }}</div>
+                <div class="bottom-text">{{ weaEle.uvi || '--' }} {{ weaEle.uvi_strength || '-' }}</div>
               </div>
             </div>
             <div class="rain-info">
@@ -85,7 +85,7 @@
                   <img src="@/assets/img/comfort.png" alt="舒适度" />
                   <div class="text">
                     <p>舒适度</p>
-                    <p>{{ comfort }}</p>
+                    <p>{{ comfort || '--' }}</p>
                   </div>
                 </div>
               </div>
@@ -124,7 +124,7 @@ import { toRaw, inject, Ref, ref, computed, watch, onMounted } from 'vue'
 import type { ProxyCoord } from '@/types/http'
 import type { LocationWarnData } from '@/types/warnInfo'
 import { getLocationBaseElement, getLocationGeo, getLocationLifeIndex, getLocationWarning } from '@/http'
-import { getImageUrl, formatVis, formatPre } from '@/utils'
+import { getImageUrl, formatAddress, formatVis, formatPre } from '@/utils'
 import MyScroll from './components/MyScroll.vue'
 import MyCard from './components/MyCard.vue'
 import ElementDetail from './components/ElementDetail.vue'
@@ -143,28 +143,20 @@ const pointParams = computed(() => {
   return toRaw(location.value)
 })
 
-// 获取地理信息与天气
-const weatherType = ref('0')
+// 获取地理信息
+
+
 const address = ref('')
-const formatAddress = ref('')
 const getLocationGeoInfo = async () => {
   const res = await getLocationGeo(pointParams.value)
   if (res.status !== 200) {
     return
   }
-
-  weatherType.value = res.data.status
-
-  const province = res.data.regeocode.addressComponent.province
-  const city = res.data.regeocode.addressComponent.city
-  const district = res.data.regeocode.addressComponent.district
-  // const township = res.data.regeocode.addressComponent.township
-  const nonEmptyComponents = [province, city, district].filter((component) => component.length !== 0)
-  address.value = nonEmptyComponents.join('—')
-
-  formatAddress.value = res.data.regeocode.formatted_address
+  // weatherType.value = res.data.status
+  address.value = formatAddress(res) || ''
 }
 // 获取天气要素
+const weatherType = ref('0')
 const weaEle = ref({
   // 温度
   tem: '0',
@@ -240,6 +232,7 @@ onMounted(() => {
   watch(
     location.value,
     () => {
+      warnInfoList.value = []
       getInfo()
     },
     { deep: true }
