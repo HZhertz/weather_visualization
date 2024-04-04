@@ -124,7 +124,7 @@ import { toRaw, inject, Ref, ref, computed, watch, onMounted } from 'vue'
 import type { ProxyCoord } from '@/types/http'
 import type { LocationWarnData } from '@/types/warnInfo'
 import { getLocationBaseElement, getLocationGeo, getLocationLifeIndex, getLocationWarning } from '@/http'
-import { getImageUrl, formatAddress, formatVis, formatPre } from '@/utils'
+import { getImageUrl, formatAddress, formatVis, formatPre, formatWind, formatWins } from '@/utils'
 import MyScroll from './components/MyScroll.vue'
 import MyCard from './components/MyCard.vue'
 import ElementDetail from './components/ElementDetail.vue'
@@ -144,7 +144,6 @@ const pointParams = computed(() => {
 })
 
 // 获取地理信息
-
 
 const address = ref('')
 const getLocationGeoInfo = async () => {
@@ -189,22 +188,24 @@ const getLocationBaseEleInfo = async () => {
   if (res.status !== 200) {
     return
   }
+
   weaEle.value.tem = res.data.list[0].value
   weaEle.value.rhu = res.data.list[1].value
   weaEle.value.wins = res.data.list[2].value
-  weaEle.value.wins_text = res.data.DS.winSpeed
+  weaEle.value.wins_text = formatWins(parseFloat(res.data.list[2].value))
   weaEle.value.wind = res.data.list[3].value
-  weaEle.value.wind_text = res.data.DS.winDir
-  weaEle.value.tcdc = res.data.list[6].value
+  weaEle.value.wind_text = formatWind(parseFloat(res.data.list[3].value))
+  weatherType.value = res.data.list[4].value
   weaEle.value.vis = res.data.list[5].value
-  weaEle.value.uvi = res.data.uvi.uvi
-  weaEle.value.uvi_text = res.data.uvi.level
-  weaEle.value.uvi_strength = res.data.uvi.strength
+  weaEle.value.tcdc = res.data.list[6].value
   weaEle.value.pre_1h = res.data.list[8].value
   weaEle.value.pre_3h = res.data.list[9].value
   weaEle.value.pre_6h = res.data.list[10].value
   weaEle.value.pre_12h = res.data.list[11].value
   weaEle.value.pre_24h = res.data.list[12].value
+  weaEle.value.uvi = res.data.uvi.uvi
+  weaEle.value.uvi_text = res.data.uvi.level
+  weaEle.value.uvi_strength = res.data.uvi.strength
 }
 // 获取生活指数
 const bodytem = ref(0)
@@ -223,6 +224,9 @@ const warnInfoList = ref<LocationWarnData>([])
 const getLocationWarningInfo = async () => {
   const res = await getLocationWarning(pointParams.value)
   console.log(res)
+  if (res.status !== 200) {
+    return
+  }
   warnInfoList.value = res.data
 }
 

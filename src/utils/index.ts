@@ -1,4 +1,4 @@
-import { BC } from '@/assets/ts'
+import { DR, BC } from '@/assets/ts'
 import { LocationGeoRes } from '@/types/geoInfo'
 
 export const getImageUrl = (path: String) => {
@@ -41,6 +41,25 @@ export const formatAddress = (res: LocationGeoRes) => {
 
     return `(${formattedLongitude},${formattedLatitude})`
   }
+}
+
+export const formatWind = (degree: number) => {
+  for (var i = 0; i < DR.length; i++) {
+    if (degree >= DR[i][0] && degree < DR[i][1]) {
+      return DR[i][2]
+    }
+  }
+
+  return '无效的风向值'
+}
+export const formatWins = (windSpeed: number) => {
+  var speeds = [0.5, 1.6, 3.4, 5.5, 8, 10.8, 13.9, 17.2, 20.8, 24.5, 28.5, 32.7]
+  for (var i = 0; i < speeds.length; i++) {
+    if (windSpeed < speeds[i]) {
+      return i + '级'
+    }
+  }
+  return 12 + '级'
 }
 export const formatVis = (visString: string) => {
   return (Number(visString) / 1000).toFixed(1)
