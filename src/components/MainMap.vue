@@ -3,14 +3,20 @@
     <el-amap
       class="gm-view"
       :zoom="4.8"
-      :zooms="[3.5, 18]"
+      :zooms="[3.5, 15]"
       :center="[104, 37]"
+      :resizeEnable="true"
       :mapStyle="mapStyle"
       @click="handleClick"
     >
       <el-amap-control-scale />
       <el-amap-control-tool-bar />
-      <el-amap-control-geolocation @complete="handleLocationSuccess" />
+      <el-amap-control-geolocation
+        @complete="handleLocationSuccess"
+        :showCircle="false"
+        :showMarker="false"
+        :zoomToAccuracy="false"
+      />
       <el-amap-marker :position="[location.lng, location.lat]" :icon="getImageUrl('banglocation.png')" />
       <el-amap-info-window
         v-model:visible="visible"

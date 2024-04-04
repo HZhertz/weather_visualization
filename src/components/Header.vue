@@ -61,9 +61,10 @@ const chooseCity = (e: MouseEvent) => {
   let target = e.target as HTMLElement | null
   if (target && target.tagName.toLowerCase() === 'span') {
     let info = target.dataset.info?.split(',')
+    console.log(info)
     if (info) {
-      location.value.lat = parseInt(info[0])
-      location.value.lng = parseInt(info[1])
+      location.value.lat = parseFloat(info[0])
+      location.value.lng = parseFloat(info[1])
     }
   }
   isSuggestVisible.value = false
@@ -80,8 +81,8 @@ const chooseAddress = (e: MouseEvent) => {
     if (loca) {
       const lArr = loca.split(',')
       console.log(lArr)
-      location.value.lng = parseInt(lArr[0])
-      location.value.lat = parseInt(lArr[1])
+      location.value.lng = parseFloat(lArr[0])
+      location.value.lat = parseFloat(lArr[1])
     }
   }
   isSuggestVisible.value = false
