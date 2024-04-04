@@ -1,24 +1,21 @@
 <script lang="ts" setup>
-import { computed, inject, onMounted, ref, toRaw, watch } from 'vue'
+import { computed, inject, onMounted, ref, watch } from 'vue'
 import { use } from 'echarts/core'
 import { CanvasRenderer } from 'echarts/renderers'
 import { LineChart } from 'echarts/charts'
 import { TooltipComponent, GridComponent, LegendComponent } from 'echarts/components'
 import VChart from 'vue-echarts'
+import type { Ref } from 'vue'
+import type { Coord } from '@/types/http'
+import type { LocationEleDetailData } from '@/types/weaInfo'
 import { getLocationEleDetail } from '@/http'
 import { formatLineChartTime } from '@/utils'
-import type { Ref } from 'vue'
-import type { ProxyCoord } from '@/types/http'
-import type { LocationEleDetailData } from '@/types/weaInfo'
-import MyCard from './MyCard.vue'
 import { ED } from '@/assets/ts'
+import MyCard from './MyCard.vue'
 
 use([CanvasRenderer, LineChart, TooltipComponent, GridComponent, LegendComponent])
 
-const location = inject<Ref<ProxyCoord>>('location')!
-const pointParams = computed(() => {
-  return toRaw(location.value)
-})
+const location = inject<Ref<Coord>>('location')!
 
 const selectedIndex = ref(0)
 const handleClick = (e: MouseEvent) => {
@@ -37,7 +34,7 @@ const eType = computed(() => {
 const lineChartData = ref<LocationEleDetailData>()
 const isShow = ref(false)
 const getLocationEleDetailInfo = async () => {
-  const res = await getLocationEleDetail(pointParams.value)
+  const res = await getLocationEleDetail(location.value)
   console.log(res)
   if (res.status !== 200) {
     return

@@ -12,8 +12,10 @@ provide('location', location)
 const mapCenter = ref([104, 37])
 provide('mapCenter', mapCenter)
 // 选中菜单项
-const menuCode = ref('')
-provide('menuCode', menuCode)
+const tileCode = ref('')
+provide('tileCode', tileCode)
+const scatterCode = ref('')
+provide('scatterCode', scatterCode)
 </script>
 
 <template>
