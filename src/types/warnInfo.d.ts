@@ -1,6 +1,6 @@
 import type { Res } from '@/types/http'
 
-type LocationWarnData = {
+interface LocationWarnData {
   expires: string
   procince: string
   leveltype: number
@@ -27,6 +27,6 @@ type LocationWarnData = {
   msgtype: string
   lat: number
   procincecode: string
-}[]
+}
 
-export type LocationWarnRes = Res<LocationWarnData>
+export type LocationWarnRes = Res<LocationWarnData[]>

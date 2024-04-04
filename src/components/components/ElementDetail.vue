@@ -25,15 +25,20 @@ import { CanvasRenderer } from 'echarts/renderers'
 import { LineChart } from 'echarts/charts'
 import { TooltipComponent, GridComponent, LegendComponent } from 'echarts/components'
 import VChart from 'vue-echarts'
-import MyCard from './MyCard.vue'
+import { getLocationEleDetail } from '@/http'
+import { formatLineChartTime } from '@/utils'
 import type { Ref } from 'vue'
 import type { ProxyCoord } from '@/types/http'
 import type { LocationEleDetailData } from '@/types/weaInfo'
-import { getLocationEleDetail } from '@/http'
-import { formatLineChartTime } from '@/utils'
+import MyCard from './MyCard.vue'
 import { ED } from '@/assets/ts'
 
 use([CanvasRenderer, LineChart, TooltipComponent, GridComponent, LegendComponent])
+
+const location = inject<Ref<ProxyCoord>>('location')!
+const pointParams = computed(() => {
+  return toRaw(location.value)
+})
 
 const selectedIndex = ref(0)
 const handleClick = (e: MouseEvent) => {
@@ -49,16 +54,14 @@ const eType = computed(() => {
   return ED[selectedIndex.value]
 })
 
-const location = inject<Ref<ProxyCoord>>('location')!
-const pointParams = computed(() => {
-  return toRaw(location.value)
-})
-
 const lineChartData = ref<LocationEleDetailData>()
-const isShow = ref(true)
+const isShow = ref(false)
 const getLocationEleDetailInfo = async () => {
   const res = await getLocationEleDetail(pointParams.value)
   console.log(res)
+  if (res.status !== 200) {
+    return
+  }
   lineChartData.value = res.data
   isShow.value = lineChartData.value.sk.list.some((item) => {
     return item.length !== 0
@@ -71,6 +74,7 @@ onMounted(() => {
   watch(
     location,
     () => {
+      isShow.value = false
       getLocationEleDetailInfo()
     },
     { deep: true }

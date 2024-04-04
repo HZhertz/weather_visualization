@@ -120,11 +120,12 @@
 </template>
 
 <script lang="ts" setup>
-import { toRaw, inject, Ref, ref, computed, watch, onMounted } from 'vue'
+import { toRaw, inject, ref, computed, watch, onMounted } from 'vue'
+import { getLocationBaseElement, getLocationGeo, getLocationLifeIndex, getLocationWarning } from '@/http'
+import { getImageUrl, formatAddress, formatWind, formatWins, formatVis, formatPre } from '@/utils'
+import type { Ref } from 'vue'
 import type { ProxyCoord } from '@/types/http'
 import type { LocationWarnData } from '@/types/warnInfo'
-import { getLocationBaseElement, getLocationGeo, getLocationLifeIndex, getLocationWarning } from '@/http'
-import { getImageUrl, formatAddress, formatVis, formatPre, formatWind, formatWins } from '@/utils'
 import MyScroll from './components/MyScroll.vue'
 import MyCard from './components/MyCard.vue'
 import ElementDetail from './components/ElementDetail.vue'
@@ -132,26 +133,17 @@ import AirQuality from './components/AirQuality.vue'
 
 const location = inject<Ref<ProxyCoord>>('location')!
 
-watch(
-  location,
-  (nv, ov) => {
-    console.log(nv, ov)
-  },
-  { deep: true }
-)
 const pointParams = computed(() => {
   return toRaw(location.value)
 })
 
 // 获取地理信息
-
 const address = ref('')
 const getLocationGeoInfo = async () => {
   const res = await getLocationGeo(pointParams.value)
   if (res.status !== 200) {
     return
   }
-  // weatherType.value = res.data.status
   address.value = formatAddress(res) || ''
 }
 // 获取天气要素
@@ -220,7 +212,7 @@ const getLocationLifeIndexInfo = async () => {
   comfort.value = res.data.DS[1].feel!
 }
 // 获取预警信息
-const warnInfoList = ref<LocationWarnData>([])
+const warnInfoList = ref<LocationWarnData[]>([])
 const getLocationWarningInfo = async () => {
   const res = await getLocationWarning(pointParams.value)
   console.log(res)
@@ -234,9 +226,9 @@ onMounted(() => {
   getInfo()
 }),
   watch(
-    location.value,
-    () => {
-      warnInfoList.value = []
+    location,
+    (nv, ov) => {
+      console.log(nv, ov)
       getInfo()
     },
     { deep: true }
