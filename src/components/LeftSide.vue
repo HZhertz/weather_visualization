@@ -1,3 +1,150 @@
+<script lang="ts" setup>
+import { inject, ref, watchEffect } from 'vue'
+import type { Ref } from 'vue'
+import type { Coord } from '@/types/http'
+import type { LocationWarnData } from '@/types/warnInfo'
+import { getLocationBaseElement, getLocationGeo, getLocationLifeIndex, getLocationWarning } from '@/http'
+import {
+  getImageUrl,
+  formatAddress,
+  formatWind,
+  formatWins,
+  formatVis,
+  formatPre,
+  deduplicateWarn,
+} from '@/utils'
+import MyScroll from './components/MyScroll.vue'
+import MyCard from './components/MyCard.vue'
+import ElementDetail from './components/ElementDetail.vue'
+import AirQuality from './components/AirQuality.vue'
+
+const location = inject<Ref<Coord>>('location')!
+
+// 获取地理位置信息
+const address = ref('')
+const getLocationGeoInfo = async () => {
+  const res = await getLocationGeo(location.value)
+  if (res.status !== 200) {
+    return
+  }
+  address.value = formatAddress(res) || ''
+}
+// 获取天气要素
+const weatherType = ref('0')
+const weaEle = ref({
+  // 温度
+  tem: '0',
+  // 湿度
+  rhu: '0',
+  // 风速
+  wins: '0',
+  wins_text: '',
+  // 风向
+  wind: '0',
+  wind_text: '',
+  // 云量
+  tcdc: '',
+  // 能见度
+  vis: '',
+  // 紫外线
+  uvi: '',
+  uvi_text: '',
+  uvi_strength: '',
+  // 降水
+  pre_1h: '',
+  pre_3h: '',
+  pre_6h: '',
+  pre_12h: '',
+  pre_24h: '',
+})
+const getLocationBaseEleInfo = async () => {
+  const res = await getLocationBaseElement(location.value)
+  console.log(res)
+  if (res.status !== 200 || res.data.list.length === 0) {
+    return
+  }
+
+  weaEle.value.tem = res.data.list[0].value
+  weaEle.value.rhu = res.data.list[1].value
+  weaEle.value.wins = res.data.list[2].value
+  weaEle.value.wins_text = formatWins(parseFloat(res.data.list[2].value))
+  weaEle.value.wind = res.data.list[3].value
+  weaEle.value.wind_text = formatWind(parseFloat(res.data.list[3].value))
+  weatherType.value = res.data.list[4].value
+  weaEle.value.vis = res.data.list[5].value
+  weaEle.value.tcdc = res.data.list[6].value
+  weaEle.value.pre_1h = res.data.list[8].value
+  weaEle.value.pre_3h = res.data.list[9].value
+  weaEle.value.pre_6h = res.data.list[10].value
+  weaEle.value.pre_12h = res.data.list[11].value
+  weaEle.value.pre_24h = res.data.list[12].value
+  weaEle.value.uvi = res.data.uvi.uvi
+  weaEle.value.uvi_text = res.data.uvi.level
+  weaEle.value.uvi_strength = res.data.uvi.strength
+}
+// 获取生活指数
+const bodytem = ref(0)
+const comfort = ref('')
+const getLocationLifeIndexInfo = async () => {
+  const res = await getLocationLifeIndex(location.value)
+  console.log(res)
+  if (res.status !== 200) {
+    return
+  }
+  bodytem.value = res.data.DS[0].value
+  comfort.value = res.data.DS[1].feel!
+}
+// 获取预警信息
+const warnInfoList = ref<LocationWarnData[]>([])
+const getLocationWarningInfo = async () => {
+  const res = await getLocationWarning(location.value)
+  console.log(res)
+  if (res.status !== 200) {
+    return
+  }
+  warnInfoList.value = deduplicateWarn(res.data)
+}
+
+// 初始化数据
+// const initData = () => {
+//   address.value = ''
+//   weatherType.value = '0'
+//   weaEle.value = {
+//     tem: '0',
+//     rhu: '0',
+//     wins: '0',
+//     wins_text: '',
+//     wind: '0',
+//     wind_text: '',
+//     tcdc: '',
+//     vis: '',
+//     uvi: '',
+//     uvi_text: '',
+//     uvi_strength: '',
+//     pre_1h: '',
+//     pre_3h: '',
+//     pre_6h: '',
+//     pre_12h: '',
+//     pre_24h: '',
+//   }
+//   bodytem.value = 0
+//   comfort.value = ''
+//   warnInfoList.value = []
+// }
+// 获取数据
+const getInfo = () => {
+  getLocationGeoInfo()
+  getLocationBaseEleInfo()
+  getLocationLifeIndexInfo()
+  getLocationWarningInfo()
+}
+
+watchEffect(() => {
+  // initData()
+  getInfo()
+})
+</script>
+
 <template>
   <div class="side">
     <div class="local-info">
@@ -119,125 +266,6 @@
   </div>
 </template>
 
-<script lang="ts" setup>
-import { inject, ref, onMounted, watchEffect } from 'vue'
-import type { Ref } from 'vue'
-import type { Coord } from '@/types/http'
-import type { LocationWarnData } from '@/types/warnInfo'
-import { getLocationBaseElement, getLocationGeo, getLocationLifeIndex, getLocationWarning } from '@/http'
-import {
-  getImageUrl,
-  formatAddress,
-  formatWind,
-  formatWins,
-  formatVis,
-  formatPre,
-  deduplicateWarn,
-} from '@/utils'
-import MyScroll from './components/MyScroll.vue'
-import MyCard from './components/MyCard.vue'
-import ElementDetail from './components/ElementDetail.vue'
-import AirQuality from './components/AirQuality.vue'
-
-const location = inject<Ref<Coord>>('location')!
-
-// 获取地理位置信息
-const address = ref('')
-const getLocationGeoInfo = async () => {
-  const res = await getLocationGeo(location.value)
-  if (res.status !== 200) {
-    return
-  }
-  address.value = formatAddress(res) || ''
-}
-// 获取天气要素
-const weatherType = ref('0')
-const weaEle = ref({
-  // 温度
-  tem: '0',
-  // 湿度
-  rhu: '0',
-  // 风速
-  wins: '0',
-  wins_text: '',
-  // 风向
-  wind: '0',
-  wind_text: '',
-  // 云量
-  tcdc: '',
-  // 能见度
-  vis: '',
-  // 紫外线
-  uvi: '',
-  uvi_text: '',
-  uvi_strength: '',
-  // 降水
-  pre_1h: '',
-  pre_3h: '',
-  pre_6h: '',
-  pre_12h: '',
-  pre_24h: '',
-})
-const getLocationBaseEleInfo = async () => {
-  const res = await getLocationBaseElement(location.value)
-  console.log(res)
-  if (res.status !== 200) {
-    return
-  }
-
-  weaEle.value.tem = res.data.list[0].value
-  weaEle.value.rhu = res.data.list[1].value
-  weaEle.value.wins = res.data.list[2].value
-  weaEle.value.wins_text = formatWins(parseFloat(res.data.list[2].value))
-  weaEle.value.wind = res.data.list[3].value
-  weaEle.value.wind_text = formatWind(parseFloat(res.data.list[3].value))
-  weatherType.value = res.data.list[4].value
-  weaEle.value.vis = res.data.list[5].value
-  weaEle.value.tcdc = res.data.list[6].value
-  weaEle.value.pre_1h = res.data.list[8].value
-  weaEle.value.pre_3h = res.data.list[9].value
-  weaEle.value.pre_6h = res.data.list[10].value
-  weaEle.value.pre_12h = res.data.list[11].value
-  weaEle.value.pre_24h = res.data.list[12].value
-  weaEle.value.uvi = res.data.uvi.uvi
-  weaEle.value.uvi_text = res.data.uvi.level
-  weaEle.value.uvi_strength = res.data.uvi.strength
-}
-// 获取生活指数
-const bodytem = ref(0)
-const comfort = ref('')
-const getLocationLifeIndexInfo = async () => {
-  const res = await getLocationLifeIndex(location.value)
-  console.log(res)
-  if (res.status !== 200) {
-    return
-  }
-  bodytem.value = res.data.DS[0].value
-  comfort.value = res.data.DS[1].feel!
-}
-// 获取预警信息
-const warnInfoList = ref<LocationWarnData[]>([])
-const getLocationWarningInfo = async () => {
-  const res = await getLocationWarning(location.value)
-  console.log(res)
-  if (res.status !== 200) {
-    return
-  }
-  warnInfoList.value = deduplicateWarn(res.data)
-}
-const getInfo = () => {
-  getLocationGeoInfo()
-  getLocationBaseEleInfo()
-  getLocationLifeIndexInfo()
-  getLocationWarningInfo()
-}
-onMounted(() => {
-  getInfo()
-})
-watchEffect(() => {
-  getInfo()
-})
-</script>
 <style lang="scss" scoped>
 .side {
   position: absolute;

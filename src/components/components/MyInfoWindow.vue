@@ -1,9 +1,3 @@
-<template>
-  <div class="info-window" :style="`--color: ${bordercolor};`">
-    <slot></slot>
-  </div>
-</template>
-
 <script lang="ts" setup>
 withDefaults(
   defineProps<{
@@ -14,6 +8,13 @@ withDefaults(
   }
 )
 </script>
+
+<template>
+  <div class="info-window" :style="`--color: ${bordercolor};`">
+    <slot></slot>
+  </div>
+</template>
+
 <style lang="scss" scoped>
 .info-window {
   display: flex;

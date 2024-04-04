@@ -1,9 +1,3 @@
-<template>
-  <div class="my-card">
-    <div class="title">{{ title }}</div>
-    <slot></slot>
-  </div>
-</template>
 <script lang="ts" setup>
 withDefaults(
   defineProps<{
@@ -14,6 +8,14 @@ withDefaults(
   }
 )
 </script>
+
+<template>
+  <div class="my-card">
+    <div class="title">{{ title }}</div>
+    <slot></slot>
+  </div>
+</template>
+
 <style lang="scss" scoped>
 .my-card {
   position: relative;

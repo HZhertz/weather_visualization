@@ -1,42 +1,3 @@
-<template>
-  <div class="map">
-    <el-amap
-      class="gm-view"
-      :zoom="4.8"
-      :zooms="[3.5, 15]"
-      :center="mapCenter"
-      :resizeEnable="true"
-      :mapStyle="mapStyle"
-      @click="handleClick"
-    >
-      <el-amap-control-scale />
-      <el-amap-control-tool-bar />
-      <el-amap-control-geolocation
-        @complete="handleLocationSuccess"
-        :showCircle="false"
-        :showMarker="false"
-        :zoomToAccuracy="false"
-      />
-      <el-amap-marker :position="[location.lng, location.lat]" :icon="getImageUrl('banglocation.png')" />
-      <el-amap-info-window
-        v-model:visible="visible"
-        :position="infoPoint"
-        :closeWhenClickMap="true"
-        :isCustom="true"
-      >
-        <MyInfoWindow :bordercolor="bordercolor">
-          <div class="div" v-for="item in infoContent">{{ item }}</div>
-        </MyInfoWindow>
-      </el-amap-info-window>
-      <el-amap-layer-tile v-if="layerType === 'tiles'" :tile-url="tileUrl" />
-
-      <el-amap-loca>
-        <el-amap-loca-point :source-data="geoData" :layer-style="layerStyle" @mousemove="handleMousemove" />
-      </el-amap-loca>
-    </el-amap>
-  </div>
-</template>
-
 <script lang="ts" setup>
 import { computed, inject, ref, watchEffect } from 'vue'
 import type { Ref } from 'vue'
@@ -128,6 +89,46 @@ const handleMousemove = (f: any, e: any) => {
   }
 }
 </script>
+
+<template>
+  <div class="map">
+    <el-amap
+      class="gm-view"
+      :zoom="4.8"
+      :zooms="[3.5, 15]"
+      :center="mapCenter"
+      :resizeEnable="true"
+      :mapStyle="mapStyle"
+      @click="handleClick"
+    >
+      <el-amap-control-scale />
+      <el-amap-control-tool-bar />
+      <el-amap-control-geolocation
+        @complete="handleLocationSuccess"
+        :showCircle="false"
+        :showMarker="false"
+        :zoomToAccuracy="false"
+      />
+      <el-amap-marker :position="[location.lng, location.lat]" :icon="getImageUrl('banglocation.png')" />
+      <el-amap-info-window
+        v-model:visible="visible"
+        :position="infoPoint"
+        :closeWhenClickMap="true"
+        :isCustom="true"
+      >
+        <MyInfoWindow :bordercolor="bordercolor">
+          <div class="div" v-for="item in infoContent">{{ item }}</div>
+        </MyInfoWindow>
+      </el-amap-info-window>
+      <el-amap-layer-tile v-if="layerType === 'tiles'" :tile-url="tileUrl" />
+
+      <el-amap-loca>
+        <el-amap-loca-point :source-data="geoData" :layer-style="layerStyle" @mousemove="handleMousemove" />
+      </el-amap-loca>
+    </el-amap>
+  </div>
+</template>
+
 <style lang="scss" scoped>
 .map {
   position: absolute;

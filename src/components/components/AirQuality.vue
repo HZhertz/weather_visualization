@@ -1,45 +1,20 @@
-<template>
-  <div class="air-quality">
-    <MyCard title="空气质量">
-      <div class="aqi-echart">
-        <v-chart class="chart" :option="option" autoresize />
-      </div>
-      <div class="aqi-list-wrap">
-        <div class="aqis">
-          <div class="item" v-for="item in aqiList" key="item.name">
-            <div class="value">{{ item.value }}</div>
-            <div class="color" :style="{ backgroundColor: item.color }"></div>
-            <div class="type">{{ item.name }}</div>
-          </div>
-        </div>
-        <div class="upd-time">更新时间:{{ updTime }}</div>
-      </div>
-    </MyCard>
-  </div>
-</template>
-
 <script lang="ts" setup>
+import { computed, inject, ref, watchEffect } from 'vue'
 import { use } from 'echarts/core'
 import { CanvasRenderer } from 'echarts/renderers'
 import { GaugeChart } from 'echarts/charts'
 import VChart from 'vue-echarts'
-import MyCard from './MyCard.vue'
-import { Ref, computed, inject, onMounted, ref, toRaw, watch } from 'vue'
-import { ProxyCoord } from '@/types/http'
-import { getLocationAqiQuality } from '@/http'
-import { AQI, BC } from '@/assets/ts'
-import { getColor } from '@/utils'
+import type { Ref } from 'vue'
+import type { Coord } from '@/types/http'
 import type { AqisData } from '@/types/aqiInfo'
+import { getLocationAqiQuality } from '@/http'
+import { getColor } from '@/utils'
+import { AQI, BC } from '@/assets/ts'
+import MyCard from './MyCard.vue'
 
 use([CanvasRenderer, GaugeChart])
 
-const location = inject<Ref<ProxyCoord>>('location')
-if (!location) {
-  throw new Error('Location maybe not provided')
-}
-const pointParams = computed(() => {
-  return toRaw(location.value)
-})
+const location = inject<Ref<Coord>>('location')!
 
 interface ListItem {
   name: string
@@ -50,8 +25,11 @@ const aqiList = ref<ListItem[]>([])
 const aqiData = ref<AqisData>()
 const updTime = ref('')
 const getLocationAqiQualityInfo = async () => {
-  const res = await getLocationAqiQuality(pointParams.value)
+  const res = await getLocationAqiQuality(location.value)
   console.log(res)
+  if (res.status !== 200) {
+    return
+  }
   aqiData.value = res.data.data
   if (aqiData.value) {
     AQI.map((item) => {
@@ -67,17 +45,10 @@ const getLocationAqiQualityInfo = async () => {
   updTime.value = res.data.data.D_DATETIME
 }
 
-onMounted(() => {
+watchEffect(() => {
+  aqiList.value = []
   getLocationAqiQualityInfo()
-}),
-  watch(
-    location,
-    () => {
-      aqiList.value = []
-      getLocationAqiQualityInfo()
-    },
-    { deep: true }
-  )
+})
 
 const gaugeData = computed(() => {
   if (aqiData.value) {
@@ -162,6 +133,27 @@ const option = ref({
   ],
 })
 </script>
+
+<template>
+  <div class="air-quality">
+    <MyCard title="空气质量">
+      <div class="aqi-echart">
+        <v-chart class="chart" :option="option" autoresize />
+      </div>
+      <div class="aqi-list-wrap">
+        <div class="aqis">
+          <div class="item" v-for="item in aqiList" key="item.name">
+            <div class="value">{{ item.value }}</div>
+            <div class="color" :style="{ backgroundColor: item.color }"></div>
+            <div class="type">{{ item.name }}</div>
+          </div>
+        </div>
+        <div class="upd-time">更新时间:{{ updTime }}</div>
+      </div>
+    </MyCard>
+  </div>
+</template>
+
 <style lang="scss" scoped>
 .aqi-echart {
   height: 160px;
@@ -206,4 +198,3 @@ const option = ref({
   }
 }
 </style>
-@/http/api

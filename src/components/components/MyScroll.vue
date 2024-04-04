@@ -1,9 +1,3 @@
-<template>
-  <div class="my-scroll" ref="myScroll">
-    <slot></slot>
-  </div>
-</template>
-
 <script lang="ts" setup>
 import { ref, onMounted } from 'vue'
 
@@ -39,6 +33,12 @@ onMounted(() => {
   }
 })
 </script>
+
+<template>
+  <div class="my-scroll" ref="myScroll">
+    <slot></slot>
+  </div>
+</template>
 
 <style lang="scss" scoped>
 .my-scroll {

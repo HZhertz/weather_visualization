@@ -1,42 +1,3 @@
-<template>
-  <div class="header">
-    <div class="logo-img">
-      <img src="@/assets/img/logo.png" alt="" />
-      全国气象实况可视化
-    </div>
-    <div class="search">
-      <input
-        class="search-input"
-        placeholder="搜索国内城市"
-        v-model="searchKey"
-        @click="
-          () => {
-            isSuggestVisible = !isSuggestVisible
-          }
-        "
-      />
-      <div class="search-suggest" v-show="isSuggestVisible">
-        <div class="hot-citys" v-if="!searchKey">
-          <div class="title">热门城市</div>
-          <div class="citys" @click="chooseCity">
-            <span class="item" v-for="item in hotCitysList" :data-info="item">{{ item[2] }}</span>
-          </div>
-        </div>
-        <div class="suggest-list" v-else>
-          <MyScroll>
-            <div class="list" @click="chooseAddress">
-              <div class="item" v-for="item in suggestList" :data-location="item.location">
-                <p class="name">{{ item.name }}</p>
-                <p class="district">{{ item.district }}</p>
-              </div>
-            </div>
-          </MyScroll>
-        </div>
-      </div>
-    </div>
-  </div>
-</template>
-
 <script lang="ts" setup>
 import { inject, onMounted, ref, watchEffect } from 'vue'
 import type { Ref } from 'vue'
@@ -114,6 +75,46 @@ watchEffect(() => {
   }
 })
 </script>
+
+<template>
+  <div class="header">
+    <div class="logo-img">
+      <img src="@/assets/img/logo.png" alt="" />
+      全国气象实况可视化
+    </div>
+    <div class="search">
+      <input
+        class="search-input"
+        placeholder="搜索国内城市"
+        v-model="searchKey"
+        @click="
+          () => {
+            isSuggestVisible = !isSuggestVisible
+          }
+        "
+      />
+      <div class="search-suggest" v-show="isSuggestVisible">
+        <div class="hot-citys" v-if="!searchKey">
+          <div class="title">热门城市</div>
+          <div class="citys" @click="chooseCity">
+            <span class="item" v-for="item in hotCitysList" :data-info="item">{{ item[2] }}</span>
+          </div>
+        </div>
+        <div class="suggest-list" v-else>
+          <MyScroll>
+            <div class="list" @click="chooseAddress">
+              <div class="item" v-for="item in suggestList" :data-location="item.location">
+                <p class="name">{{ item.name }}</p>
+                <p class="district">{{ item.district }}</p>
+              </div>
+            </div>
+          </MyScroll>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
 <style lang="scss" scoped>
 .header {
   display: flex;

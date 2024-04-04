@@ -1,22 +1,3 @@
-<template>
-  <div class="menu">
-    <MyScroll>
-      <div class="menu-box" @click="handleClick">
-        <div
-          class="menu-item"
-          v-for="item in MT"
-          :key="item.code"
-          :data-code="item.code"
-          :class="{ selected: selectedCode === item.code }"
-        >
-          <div class="icon"><img :src="getImageUrl('menu_icon/' + item.icon + '.png')" alt="" /></div>
-          <div class="text">{{ item.name }}</div>
-        </div>
-      </div>
-    </MyScroll>
-  </div>
-</template>
-
 <script lang="ts" setup>
 import MyScroll from './components/MyScroll.vue'
 import { getImageUrl } from '@/utils'
@@ -40,6 +21,26 @@ const handleClick = (e: MouseEvent) => {
   }
 }
 </script>
+
+<template>
+  <div class="menu">
+    <MyScroll>
+      <div class="menu-box" @click="handleClick">
+        <div
+          class="menu-item"
+          v-for="item in MT"
+          :key="item.code"
+          :data-code="item.code"
+          :class="{ selected: selectedCode === item.code }"
+        >
+          <div class="icon"><img :src="getImageUrl('menu_icon/' + item.icon + '.png')" alt="" /></div>
+          <div class="text">{{ item.name }}</div>
+        </div>
+      </div>
+    </MyScroll>
+  </div>
+</template>
+
 <style lang="scss" scoped>
 .menu {
   position: absolute;

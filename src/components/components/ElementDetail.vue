@@ -1,23 +1,3 @@
-<template>
-  <div class="element-detail" v-if="isShow">
-    <MyCard title="要素详情">
-      <div class="type-box" @click="handleClick">
-        <span
-          v-for="item in ED"
-          :key="item.id"
-          :data-index="item.id"
-          :class="{ selected: selectedIndex === item.id }"
-        >
-          {{ item.type }}
-        </span>
-      </div>
-      <div class="history-echart">
-        <v-chart class="chart" :option="option" autoresize />
-      </div>
-    </MyCard>
-  </div>
-</template>
-
 <script lang="ts" setup>
 import { computed, inject, onMounted, ref, toRaw, watch } from 'vue'
 import { use } from 'echarts/core'
@@ -207,6 +187,27 @@ const option = ref({
   ],
 })
 </script>
+
+<template>
+  <div class="element-detail" v-if="isShow">
+    <MyCard title="要素详情">
+      <div class="type-box" @click="handleClick">
+        <span
+          v-for="item in ED"
+          :key="item.id"
+          :data-index="item.id"
+          :class="{ selected: selectedIndex === item.id }"
+        >
+          {{ item.type }}
+        </span>
+      </div>
+      <div class="history-echart">
+        <v-chart class="chart" :option="option" autoresize />
+      </div>
+    </MyCard>
+  </div>
+</template>
+
 <style lang="scss" scoped>
 .element-detail {
   .type-box {

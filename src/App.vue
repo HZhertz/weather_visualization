@@ -1,16 +1,3 @@
-<template>
-  <div class="container">
-    <div class="header">
-      <Header></Header>
-    </div>
-    <div class="body">
-      <MainMap></MainMap>
-      <LeftSide></LeftSide>
-      <RightMenu></RightMenu>
-    </div>
-  </div>
-</template>
-
 <script setup lang="ts">
 import { provide, ref } from 'vue'
 import Header from './components/Header.vue'
@@ -28,6 +15,19 @@ provide('mapCenter', mapCenter)
 const menuCode = ref('')
 provide('menuCode', menuCode)
 </script>
+
+<template>
+  <div class="container">
+    <div class="header">
+      <Header></Header>
+    </div>
+    <div class="body">
+      <MainMap></MainMap>
+      <LeftSide></LeftSide>
+      <RightMenu></RightMenu>
+    </div>
+  </div>
+</template>
 
 <style lang="scss" scoped>
 .container {
