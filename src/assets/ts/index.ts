@@ -18,7 +18,6 @@ export const DR: [number, number, string][] = [
   [305, 325, '西北风'],
   [325, 350, '北偏西'],
 ]
-
 // 要素详情
 export const ED = [
   {

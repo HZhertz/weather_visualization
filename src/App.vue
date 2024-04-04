@@ -18,20 +18,15 @@ import LeftSide from './components/LeftSide.vue'
 import MainMap from './components/MainMap.vue'
 import RightMenu from './components/RightMenu.vue'
 
+// 地图标点
 const location = ref({ lng: 116.391512, lat: 39.905822 })
 provide('location', location)
-// watch(
-//   location,
-//   (newValue) => {
-//     console.log(newValue)
-//   },
-//   { deep: true }
-// )
+// 地图中心
+const mapCenter = ref([104, 37])
+provide('mapCenter', mapCenter)
+// 选中菜单项
 const menuCode = ref('')
 provide('menuCode', menuCode)
-// watch(menuCode, (newValue) => {
-//   console.log(newValue)
-// })
 </script>
 
 <style lang="scss" scoped>

@@ -38,24 +38,30 @@
 </template>
 
 <script lang="ts" setup>
-import { Ref, inject, onMounted, ref, watchEffect } from 'vue'
+import { inject, onMounted, ref, watchEffect } from 'vue'
+import type { Ref } from 'vue'
+import type { Coord } from '@/types/http'
+import type { SearchHotCitysData, SearchSuggestData } from '@/types/searchInfo'
 import { getSearchHotCitys, getSearchSuggest } from '@/http'
-import { SearchHotCitysData, SearchSuggestData } from '@/types/searchInfo'
-import { ProxyCoord } from '@/types/http'
 import MyScroll from './components/MyScroll.vue'
 
-const location = inject<Ref<ProxyCoord>>('location')!
+// inject 注入
+const location = inject<Ref<Coord>>('location')!
+const mapCenter = inject<Ref<[number, number]>>('mapCenter')!
 
+// 搜索关键字
 const searchKey = ref('')
+// 搜索联想(结果)框是否可见
 const isSuggestVisible = ref(false)
 
-const hotCitysList = ref<SearchHotCitysData>([])
+// 获取热门城市信息
+const hotCitysList = ref<SearchHotCitysData[]>([])
 const getSearchHotCitysInfo = async () => {
   const res = await getSearchHotCitys()
   console.log(res)
   hotCitysList.value = res.data
 }
-
+// 选择热门城市 点击事件 获得位置信息并更新 location mapCenter
 const chooseCity = (e: MouseEvent) => {
   console.log(e)
   let target = e.target as HTMLElement | null
@@ -63,26 +69,36 @@ const chooseCity = (e: MouseEvent) => {
     let info = target.dataset.info?.split(',')
     console.log(info)
     if (info) {
-      location.value.lat = parseFloat(info[0])
-      location.value.lng = parseFloat(info[1])
+      let lat = parseFloat(info[0])
+      let lng = parseFloat(info[1])
+      location.value = { lat, lng }
+      mapCenter.value = [lng, lat]
     }
   }
   isSuggestVisible.value = false
 }
 
+// 获取搜索建议(结果)
+const suggestList = ref<SearchSuggestData[]>([])
+const getSearchSuggestInfo = async () => {
+  const res = await getSearchSuggest(searchKey.value)
+  console.log(res)
+  suggestList.value = res.data
+}
+// 选择搜索地址 点击事件 获得位置信息并更新 location mapCenter
 const chooseAddress = (e: MouseEvent) => {
   console.log(e)
-  const target = e.target as HTMLElement
+  const target = (e.target as HTMLElement) || null
   const item = target.closest('.item')
   if (item) {
-    console.dir(item)
     const loca = item.getAttribute('data-location')
-    console.log(loca)
     if (loca) {
       const lArr = loca.split(',')
       console.log(lArr)
-      location.value.lng = parseFloat(lArr[0])
-      location.value.lat = parseFloat(lArr[1])
+      let lat = parseFloat(lArr[1])
+      let lng = parseFloat(lArr[0])
+      location.value = { lat, lng }
+      mapCenter.value = [lng, lat]
     }
   }
   isSuggestVisible.value = false
@@ -91,13 +107,6 @@ const chooseAddress = (e: MouseEvent) => {
 onMounted(() => {
   getSearchHotCitysInfo()
 })
-
-const suggestList = ref<SearchSuggestData>([])
-const getSearchSuggestInfo = async () => {
-  const res = await getSearchSuggest(searchKey.value)
-  console.log(res)
-  suggestList.value = res.data
-}
 watchEffect(() => {
   if (searchKey.value) {
     console.log(searchKey.value)

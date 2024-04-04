@@ -1,8 +1,8 @@
 import type { Res } from '@/types/http'
 
-type SearchHotCitysData = [string, string, string][]
+type SearchHotCitysData = [string, string, string]
 
-type SearchSuggestData = {
+interface SearchSuggestData {
   adcode: string
   address: string
   city: []
@@ -11,7 +11,7 @@ type SearchSuggestData = {
   location: string
   name: string
   typecode: string
-}[]
+}
 
-export type SearchHotCitysRes = Res<SearchHotCitysData>
-export type SearchSuggestRes = Res<SearchSuggestData>
+export type SearchHotCitysRes = Res<SearchHotCitysData[]>
+export type SearchSuggestRes = Res<SearchSuggestData[]>

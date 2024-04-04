@@ -1,11 +1,10 @@
+// 位置信息参数
 export interface Coord {
   lat: number
   lng: number
 }
-export type ProxyCoord = {
-  [P in keyof Coord]: Coord[P]
-}
 
+// 返回数据格式
 export type Res<Data> = {
   status: number
   type: string

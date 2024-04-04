@@ -4,7 +4,7 @@
       class="gm-view"
       :zoom="4.8"
       :zooms="[3.5, 15]"
-      :center="[104, 37]"
+      :center="mapCenter"
       :resizeEnable="true"
       :mapStyle="mapStyle"
       @click="handleClick"
@@ -38,16 +38,20 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, inject, Ref, computed, watchEffect } from 'vue'
-import { ProxyCoord } from '@/types/http'
-import { getImageUrl, getColor, convertToGeoJSON, getScatterColor } from '@/utils'
+import { computed, inject, ref, watchEffect } from 'vue'
+import type { Ref } from 'vue'
+import type { Coord } from '@/types/http'
 import { getAqiScatter } from '@/http'
+import { getImageUrl, getColor, convertToGeoJSON, getScatterColor } from '@/utils'
 import { MT, CS } from '@/assets/ts'
 import MyInfoWindow from './components/MyInfoWindow.vue'
 
-const location = inject<Ref<ProxyCoord>>('location')!
+// inject 注入
+const location = inject<Ref<Coord>>('location')!
+const mapCenter = inject<Ref<[number, number]>>('mapCenter')!
 const menuCode = inject<Ref<string>>('menuCode')!
 
+// 地图样式
 const mapStyle = computed(() => {
   if (['CL'].includes(menuCode.value)) {
     return 'amap://styles/grey'
@@ -55,19 +59,28 @@ const mapStyle = computed(() => {
   return 'amap://styles/fresh'
 })
 
+// 信息窗口是否可见
 const visible = ref(false)
+// 信息窗口位置
 const infoPoint = ref([120, 31])
+// 信息窗口内容
 const infoContent = ref<string[]>([])
 
+// 地图点击事件 获得位置信息并更新 location
 const handleClick = (e: any) => {
   console.log(e)
-  location.value.lng = e.lnglat.lng
-  location.value.lat = e.lnglat.lat
+  location.value = {
+    lat: e.lnglat.lat,
+    lng: e.lnglat.lng,
+  }
 }
+// 地图定位事件 获得位置信息并更新 location mapCenter
 const handleLocationSuccess = (statue: any) => {
   console.log(statue)
-  location.value.lat = statue.position.lat
-  location.value.lng = statue.position.lng
+  let lat = statue.position.lat
+  let lng = statue.position.lng
+  location.value = { lat, lng }
+  mapCenter.value = [lng, lat]
 }
 
 const menuItem = computed(() => {

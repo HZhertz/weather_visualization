@@ -120,7 +120,10 @@
 </template>
 
 <script lang="ts" setup>
-import { toRaw, inject, ref, computed, watch, onMounted } from 'vue'
+import { inject, ref, onMounted, watchEffect } from 'vue'
+import type { Ref } from 'vue'
+import type { Coord } from '@/types/http'
+import type { LocationWarnData } from '@/types/warnInfo'
 import { getLocationBaseElement, getLocationGeo, getLocationLifeIndex, getLocationWarning } from '@/http'
 import {
   getImageUrl,
@@ -131,24 +134,17 @@ import {
   formatPre,
   deduplicateWarn,
 } from '@/utils'
-import type { Ref } from 'vue'
-import type { ProxyCoord } from '@/types/http'
-import type { LocationWarnData } from '@/types/warnInfo'
 import MyScroll from './components/MyScroll.vue'
 import MyCard from './components/MyCard.vue'
 import ElementDetail from './components/ElementDetail.vue'
 import AirQuality from './components/AirQuality.vue'
 
-const location = inject<Ref<ProxyCoord>>('location')!
+const location = inject<Ref<Coord>>('location')!
 
-const pointParams = computed(() => {
-  return toRaw(location.value)
-})
-
-// 获取地理信息
+// 获取地理位置信息
 const address = ref('')
 const getLocationGeoInfo = async () => {
-  const res = await getLocationGeo(pointParams.value)
+  const res = await getLocationGeo(location.value)
   if (res.status !== 200) {
     return
   }
@@ -183,7 +179,7 @@ const weaEle = ref({
   pre_24h: '',
 })
 const getLocationBaseEleInfo = async () => {
-  const res = await getLocationBaseElement(pointParams.value)
+  const res = await getLocationBaseElement(location.value)
   console.log(res)
   if (res.status !== 200) {
     return
@@ -211,7 +207,7 @@ const getLocationBaseEleInfo = async () => {
 const bodytem = ref(0)
 const comfort = ref('')
 const getLocationLifeIndexInfo = async () => {
-  const res = await getLocationLifeIndex(pointParams.value)
+  const res = await getLocationLifeIndex(location.value)
   console.log(res)
   if (res.status !== 200) {
     return
@@ -222,31 +218,25 @@ const getLocationLifeIndexInfo = async () => {
 // 获取预警信息
 const warnInfoList = ref<LocationWarnData[]>([])
 const getLocationWarningInfo = async () => {
-  const res = await getLocationWarning(pointParams.value)
+  const res = await getLocationWarning(location.value)
   console.log(res)
   if (res.status !== 200) {
     return
   }
   warnInfoList.value = deduplicateWarn(res.data)
 }
-
-onMounted(() => {
-  getInfo()
-}),
-  watch(
-    location,
-    (nv, ov) => {
-      console.log(nv, ov)
-      getInfo()
-    },
-    { deep: true }
-  )
 const getInfo = () => {
   getLocationGeoInfo()
   getLocationBaseEleInfo()
   getLocationLifeIndexInfo()
   getLocationWarningInfo()
 }
+onMounted(() => {
+  getInfo()
+})
+watchEffect(() => {
+  getInfo()
+})
 </script>
 <style lang="scss" scoped>
 .side {
