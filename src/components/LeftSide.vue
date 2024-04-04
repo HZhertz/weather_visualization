@@ -122,7 +122,15 @@
 <script lang="ts" setup>
 import { toRaw, inject, ref, computed, watch, onMounted } from 'vue'
 import { getLocationBaseElement, getLocationGeo, getLocationLifeIndex, getLocationWarning } from '@/http'
-import { getImageUrl, formatAddress, formatWind, formatWins, formatVis, formatPre } from '@/utils'
+import {
+  getImageUrl,
+  formatAddress,
+  formatWind,
+  formatWins,
+  formatVis,
+  formatPre,
+  deduplicateWarn,
+} from '@/utils'
 import type { Ref } from 'vue'
 import type { ProxyCoord } from '@/types/http'
 import type { LocationWarnData } from '@/types/warnInfo'
@@ -219,7 +227,7 @@ const getLocationWarningInfo = async () => {
   if (res.status !== 200) {
     return
   }
-  warnInfoList.value = res.data
+  warnInfoList.value = deduplicateWarn(res.data)
 }
 
 onMounted(() => {

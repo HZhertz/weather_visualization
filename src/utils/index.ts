@@ -1,5 +1,6 @@
 import { DR, BC } from '@/assets/ts'
 import { LocationGeoRes } from '@/types/geoInfo'
+import { LocationWarnData } from '@/types/warnInfo'
 
 export const getImageUrl = (path: String) => {
   // console.log(new URL(`../assets/img/${path}`, import.meta.url).href)
@@ -66,6 +67,18 @@ export const formatVis = (visString: string) => {
 }
 export const formatPre = (preString: string) => {
   return Number(preString) < 0 ? 0.0 : Number(preString).toFixed(1)
+}
+
+export const deduplicateWarn = (warninfoList: LocationWarnData[]) => {
+  return Object.values(
+    warninfoList.reduce((acc: { [key: string]: LocationWarnData }, cur: LocationWarnData) => {
+      let key = cur.signaltypecode + cur.sender
+      if (!acc[key] || new Date(acc[key].time) < new Date(cur.time)) {
+        acc[key] = cur
+      }
+      return acc
+    }, {})
+  )
 }
 
 export const formatLineChartTime = (arr: [string, number][]) => {
