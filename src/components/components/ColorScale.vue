@@ -33,14 +33,15 @@ defineProps<{
   .band {
     display: flex;
     align-items: center;
-    width: 300px;
+    width: 320px;
     height: 20px;
     padding: 5px;
     background-color: #fff;
     .unit {
-      width: 20px;
-      font-size: 12px;
+      width: 28px;
       margin-right: 5px;
+      font-size: 10px;
+      text-align: right;
     }
     .color-value {
       position: relative;
@@ -48,7 +49,7 @@ defineProps<{
       .color-box {
         display: flex;
         position: absolute;
-        width: 260px;
+        width: 280px;
         .color-item {
           flex: 1;
           height: 14px;
@@ -57,7 +58,7 @@ defineProps<{
       .value-box {
         display: flex;
         position: absolute;
-        width: 260px;
+        width: 280px;
         text-align: right;
         .value-item {
           flex: 1;

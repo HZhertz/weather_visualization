@@ -35,22 +35,22 @@ const handleClick = (e: MouseEvent, type: string) => {
 const colorScaleList = ref<ColorScaleItem[]>([])
 
 watch(tileCode, () => {
+  colorScaleList.value = colorScaleList.value.filter((item) => {
+    return item.type === 'scatter'
+  })
   if (tileCode.value) {
     colorScaleList.value.push(CS[tileCode.value])
   } else {
-    colorScaleList.value = colorScaleList.value.filter((item) => {
-      return item.type === 'scatter'
-    })
   }
 })
 
 watch(scatterCode, () => {
+  colorScaleList.value = colorScaleList.value.filter((item) => {
+    return item.type === 'tiles'
+  })
   if (scatterCode.value) {
     colorScaleList.value.push(CS[scatterCode.value])
   } else {
-    colorScaleList.value = colorScaleList.value.filter((item) => {
-      return item.type === 'tiles'
-    })
   }
 })
 </script>
@@ -98,20 +98,6 @@ watch(scatterCode, () => {
         <ColorScale :item="item" v-for="item in colorScaleList" :key="item.code" />
       </div>
     </div>
-
-    <!-- <div class="color-scale">
-      <div class="band">
-        <div class="unit">hpa</div>
-        <div class="color-value">
-          <div class="color-box">
-            <div class="color-item" :style="{ backgroundColor: item }" v-for="item in cs.color"></div>
-          </div>
-          <div class="value-box">
-            <div class="value-item" v-for="item in cs.value">{{ item }}</div>
-          </div>
-        </div>
-      </div>
-    </div> -->
   </div>
 </template>
 
@@ -180,7 +166,7 @@ watch(scatterCode, () => {
   }
   .color-position {
     position: absolute;
-    left: -320px;
+    left: -340px;
     bottom: 30px;
     height: auto;
     .color {
@@ -189,47 +175,4 @@ watch(scatterCode, () => {
     }
   }
 }
-// .color-scale {
-//   position: absolute;
-//   left: -300px;
-//   bottom: 30px;
-
-//   background-color: #ff0000;
-//   .band {
-//     display: flex;
-//     align-items: center;
-//     width: 290px;
-//     height: 20px;
-//     padding: 5px;
-//     background-color: #fff;
-//     .unit {
-//       font-size: 14px;
-//       margin-right: 5px;
-//     }
-//     .color-value {
-//       position: relative;
-//       height: 10px;
-//       .color-box {
-//         display: flex;
-//         position: absolute;
-//         width: 250px;
-//         .color-item {
-//           flex: 1;
-//           height: 14px;
-//         }
-//       }
-//       .value-box {
-//         display: flex;
-//         position: absolute;
-
-//         width: 250px;
-//         text-align: right;
-//         .value-item {
-//           flex: 1;
-//           font-size: 10px;
-//         }
-//       }
-//     }
-//   }
-// }
 </style>
