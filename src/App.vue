@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import { provide, ref } from 'vue'
-import Header from './components/Header.vue'
-import LeftSide from './components/LeftSide.vue'
-import MainMap from './components/MainMap.vue'
-import RightMenu from './components/RightMenu.vue'
+import Header from '@/components/Header.vue'
+import LeftSide from '@/components/LeftSide.vue'
+import MainMap from '@/components/MainMap.vue'
+import RightMenu from '@/components/RightMenu.vue'
+import WvDrawer from '@/components/components/WvDrawer.vue'
 
 // 地图标点
 const location = ref({ lng: 116.391512, lat: 39.905822 })
@@ -25,8 +26,12 @@ provide('scatterCode', scatterCode)
     </div>
     <div class="body">
       <MainMap></MainMap>
-      <LeftSide></LeftSide>
-      <RightMenu></RightMenu>
+      <WvDrawer width="20.8vw" direction="left">
+        <LeftSide></LeftSide>
+      </WvDrawer>
+      <WvDrawer width="10.4vw" direction="right">
+        <RightMenu></RightMenu>
+      </WvDrawer>
     </div>
   </div>
 </template>
@@ -40,6 +45,7 @@ provide('scatterCode', scatterCode)
   .body {
     position: relative;
     flex: 1;
+		overflow: hidden;
   }
 }
 </style>

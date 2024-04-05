@@ -104,7 +104,6 @@ watch(scatterCode, () => {
 <style lang="scss" scoped>
 .menu {
   position: absolute;
-  right: 0;
   bottom: 0;
   top: 0;
   width: 200px;

@@ -13,6 +13,7 @@ import {
   formatPre,
   deduplicateWarn,
 } from '@/utils'
+
 import MyScroll from './components/MyScroll.vue'
 import MyCard from './components/MyCard.vue'
 import ElementDetail from './components/ElementDetail.vue'
@@ -261,15 +262,12 @@ watchEffect(() => {
         </div>
       </MyScroll>
     </div>
-
-    <div class="left-show-hide"></div>
   </div>
 </template>
 
 <style lang="scss" scoped>
 .side {
   position: absolute;
-  left: 0;
   bottom: 0;
   top: 0;
   width: 400px;
@@ -568,4 +566,3 @@ watchEffect(() => {
   }
 }
 </style>
-@/http/api
