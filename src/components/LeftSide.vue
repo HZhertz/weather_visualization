@@ -14,10 +14,10 @@ import {
   deduplicateWarn,
 } from '@/utils'
 
-import MyScroll from './components/MyScroll.vue'
-import MyCard from './components/MyCard.vue'
-import ElementDetail from './components/ElementDetail.vue'
-import AirQuality from './components/AirQuality.vue'
+import WvScroll from '@/components/components/WvScroll.vue'
+import WvCard from '@/components/components/WvCard.vue'
+import ElementDetail from './side/ElementDetail.vue'
+import AirQuality from './side/AirQuality.vue'
 
 const location = inject<Ref<Coord>>('location')!
 
@@ -155,7 +155,7 @@ watchEffect(() => {
       <div class="city-name" :title="address">{{ address }}</div>
     </div>
     <div class="inner-padding">
-      <MyScroll>
+      <WvScroll>
         <div class="content">
           <div class="basic-element">
             <div class="top-info">
@@ -220,7 +220,7 @@ watchEffect(() => {
             </div>
           </div>
           <div class="life-live">
-            <MyCard title="生活指数">
+            <WvCard title="生活指数">
               <div class="box">
                 <div class="item">
                   <img src="@/assets/img/bodytem.png" alt="体感温度" />
@@ -237,10 +237,10 @@ watchEffect(() => {
                   </div>
                 </div>
               </div>
-            </MyCard>
+            </WvCard>
           </div>
           <div class="warn-info">
-            <MyCard title="预警信息">
+            <WvCard title="预警信息">
               <template v-if="warnInfoList.length === 0">
                 <div class="non-warn">当前没有预警</div>
               </template>
@@ -255,12 +255,12 @@ watchEffect(() => {
                   </div>
                 </div>
               </template>
-            </MyCard>
+            </WvCard>
           </div>
           <ElementDetail />
           <AirQuality />
         </div>
-      </MyScroll>
+      </WvScroll>
     </div>
   </div>
 </template>

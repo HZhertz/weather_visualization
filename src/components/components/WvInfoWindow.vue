@@ -10,13 +10,13 @@ withDefaults(
 </script>
 
 <template>
-  <div class="info-window" :style="`--color: ${bordercolor};`">
+  <div class="wv-info-window" :style="`--color: ${bordercolor};`">
     <slot></slot>
   </div>
 </template>
 
 <style lang="scss" scoped>
-.info-window {
+.wv-info-window {
   display: flex;
   flex-direction: column;
 
@@ -29,26 +29,26 @@ withDefaults(
   &::before {
     content: '';
     position: absolute;
-    bottom: -12px; /* 调整三角形的位置 */
+    bottom: -12px;
     left: 50%;
     transform: translateX(-50%);
     width: 0;
     height: 0;
     border-left: 10px solid transparent;
     border-right: 10px solid transparent;
-    border-top: 12px solid var(--color); /* 三角形的颜色 */
+    border-top: 12px solid var(--color);
   }
   &::after {
     content: '';
     position: absolute;
-    bottom: -10px; /* 比 ::before 小一点，创建一个边框效果 */
+    bottom: -10px;
     left: 50%;
     transform: translateX(-50%);
     width: 0;
     height: 0;
     border-left: 8px solid transparent;
     border-right: 8px solid transparent;
-    border-top: 11px solid #fff; /* 与背景颜色相同 */
+    border-top: 11px solid #fff;
   }
 }
 </style>

@@ -4,7 +4,7 @@ import type { Ref } from 'vue'
 import type { Coord } from '@/types/http'
 import type { SearchHotCitysData, SearchSuggestData } from '@/types/searchInfo'
 import { getSearchHotCitys, getSearchSuggest } from '@/http'
-import MyScroll from './components/MyScroll.vue'
+import WvScroll from '@/components/components/WvScroll.vue'
 
 // inject 注入
 const location = inject<Ref<Coord>>('location')!
@@ -70,7 +70,6 @@ onMounted(() => {
 })
 watchEffect(() => {
   if (searchKey.value) {
-    console.log(searchKey.value)
     getSearchSuggestInfo()
   }
 })
@@ -101,14 +100,14 @@ watchEffect(() => {
           </div>
         </div>
         <div class="suggest-list" v-else>
-          <MyScroll>
+          <WvScroll>
             <div class="list" @click="chooseAddress">
               <div class="item" v-for="item in suggestList" :data-location="item.location">
                 <p class="name">{{ item.name }}</p>
                 <p class="district">{{ item.district }}</p>
               </div>
             </div>
-          </MyScroll>
+          </WvScroll>
         </div>
       </div>
     </div>

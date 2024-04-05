@@ -5,7 +5,7 @@ import type { Coord } from '@/types/http'
 import { getAqiScatter } from '@/http'
 import { getImageUrl, convertToGeoJSON, getScatterColor } from '@/utils'
 import { MT_tile, MT_scatter, CS } from '@/assets/ts'
-import MyInfoWindow from './components/MyInfoWindow.vue'
+import WvInfoWindow from '@/components/components/WvInfoWindow.vue'
 
 // inject 注入
 const location = inject<Ref<Coord>>('location')!
@@ -149,9 +149,9 @@ const handleMousemove = (f: any) => {
         :closeWhenClickMap="true"
         :isCustom="true"
       >
-        <MyInfoWindow :bordercolor="bordercolor">
+        <WvInfoWindow :bordercolor="bordercolor">
           <div class="div" v-for="item in infoContent">{{ item }}</div>
-        </MyInfoWindow>
+        </WvInfoWindow>
       </el-amap-info-window>
       <!-- 瓦片图层 -->
       <el-amap-layer-tile v-if="tileCode" :tile-url="tileUrl" />

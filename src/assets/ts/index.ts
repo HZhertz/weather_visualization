@@ -431,7 +431,6 @@ export const MT_tile = [
   },
   { type: 'tiles', name: '气压', unit: 'hPa', code: 'APM', icon: 'pressure', palette: '' },
 ]
-
 // 菜单项-空气质量-散点图层
 export const MT_scatter = [
   { type: 'scatter', name: '空气质量指数', unit: '', code: 'V_AQI', icon: 'aqiValue' },

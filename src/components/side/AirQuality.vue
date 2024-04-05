@@ -10,7 +10,7 @@ import type { AqisData } from '@/types/aqiInfo'
 import { getLocationAqiQuality } from '@/http'
 import { getColor } from '@/utils'
 import { AQI, BC } from '@/assets/ts'
-import MyCard from './MyCard.vue'
+import WvCard from '@/components/components/WvCard.vue'
 
 use([CanvasRenderer, GaugeChart])
 
@@ -136,7 +136,7 @@ const option = ref({
 
 <template>
   <div class="air-quality">
-    <MyCard title="空气质量">
+    <WvCard title="空气质量">
       <div class="aqi-echart">
         <v-chart class="chart" :option="option" autoresize />
       </div>
@@ -150,7 +150,7 @@ const option = ref({
         </div>
         <div class="upd-time">更新时间:{{ updTime }}</div>
       </div>
-    </MyCard>
+    </WvCard>
   </div>
 </template>
 

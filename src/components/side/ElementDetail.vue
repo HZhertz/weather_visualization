@@ -11,7 +11,7 @@ import type { LocationEleDetailData } from '@/types/weaInfo'
 import { getLocationEleDetail } from '@/http'
 import { formatLineChartTime } from '@/utils'
 import { ED } from '@/assets/ts'
-import MyCard from './MyCard.vue'
+import WvCard from '@/components/components/WvCard.vue'
 
 use([CanvasRenderer, LineChart, TooltipComponent, GridComponent, LegendComponent])
 
@@ -187,7 +187,7 @@ const option = ref({
 
 <template>
   <div class="element-detail" v-if="isShow">
-    <MyCard title="要素详情">
+    <WvCard title="要素详情">
       <div class="type-box" @click="handleClick">
         <span
           v-for="item in ED"
@@ -201,7 +201,7 @@ const option = ref({
       <div class="history-echart">
         <v-chart class="chart" :option="option" autoresize />
       </div>
-    </MyCard>
+    </WvCard>
   </div>
 </template>
 

@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ColorScaleItem } from '@/types/const'
+import type { ColorScaleItem } from '@/types/const'
 
 defineProps<{
   item: ColorScaleItem

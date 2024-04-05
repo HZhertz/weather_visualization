@@ -1,47 +1,47 @@
 <script lang="ts" setup>
 import { ref, onMounted } from 'vue'
 
-const myScroll = ref<HTMLElement | null>(null)
+const wvScroll = ref<HTMLElement | null>(null)
 let isDown = false
 let startY: number
 let scrollTop: number
 
 onMounted(() => {
-  const $myScroll = myScroll.value
-  if ($myScroll) {
-    $myScroll.addEventListener('wheel', function (e) {
+  const $wvScroll = wvScroll.value
+  if ($wvScroll) {
+    $wvScroll.addEventListener('wheel', function (e) {
       e.preventDefault()
-      $myScroll.scrollTop += e.deltaY / 2
+      $wvScroll.scrollTop += e.deltaY / 2
     })
 
-    $myScroll.addEventListener('mousedown', (e) => {
+    $wvScroll.addEventListener('mousedown', (e) => {
       isDown = true
       startY = e.pageY
-      scrollTop = $myScroll.scrollTop
+      scrollTop = $wvScroll.scrollTop
     })
 
-    $myScroll.addEventListener('mouseup', () => {
+    $wvScroll.addEventListener('mouseup', () => {
       isDown = false
     })
 
-    $myScroll.addEventListener('mousemove', (e) => {
+    $wvScroll.addEventListener('mousemove', (e) => {
       if (!isDown) return
       const y = e.pageY
       const walk = y - startY
-      $myScroll.scrollTop = scrollTop - walk
+      $wvScroll.scrollTop = scrollTop - walk
     })
   }
 })
 </script>
 
 <template>
-  <div class="my-scroll" ref="myScroll">
+  <div class="wv-scroll" ref="wvScroll">
     <slot></slot>
   </div>
 </template>
 
 <style lang="scss" scoped>
-.my-scroll {
+.wv-scroll {
   position: absolute;
   top: 0;
   bottom: 0;

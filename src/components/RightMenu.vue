@@ -1,11 +1,11 @@
 <script lang="ts" setup>
 import { inject, ref, watch } from 'vue'
 import type { Ref } from 'vue'
+import type { ColorScaleItem } from '@/types/const'
 import { getImageUrl } from '@/utils'
 import { CS, MT_tile, MT_scatter } from '@/assets/ts'
-import MyScroll from './components/MyScroll.vue'
-import { ColorScaleItem } from '@/types/const'
-import ColorScale from './components/ColorScale.vue'
+import WvScroll from '@/components/components/WvScroll.vue'
+import ColorScale from './menu/ColorScale.vue'
 
 const tileCode = inject<Ref<string>>('tileCode')!
 const scatterCode = inject<Ref<string>>('scatterCode')!
@@ -14,10 +14,8 @@ const selectedTileCode = ref('')
 const selectedScatterCode = ref('')
 
 const handleClick = (e: MouseEvent, type: string) => {
-  console.log(e, type)
   const target = e.target as HTMLElement
   const menuItem = target.closest('.menu-item')
-  console.log(menuItem)
   if (menuItem) {
     const code = menuItem.getAttribute('data-code')
     if (code) {
@@ -57,7 +55,7 @@ watch(scatterCode, () => {
 
 <template>
   <div class="menu">
-    <MyScroll>
+    <WvScroll>
       <div class="title">
         <div class="left-line"></div>
         <div class="text">基本要素</div>
@@ -92,7 +90,7 @@ watch(scatterCode, () => {
           <div class="text">{{ item.name }}</div>
         </li>
       </ul>
-    </MyScroll>
+    </WvScroll>
     <div class="color-position">
       <div class="color">
         <ColorScale :item="item" v-for="item in colorScaleList" :key="item.code" />

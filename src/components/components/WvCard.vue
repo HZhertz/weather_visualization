@@ -10,14 +10,14 @@ withDefaults(
 </script>
 
 <template>
-  <div class="my-card">
+  <div class="wv-card">
     <div class="title">{{ title }}</div>
     <slot></slot>
   </div>
 </template>
 
 <style lang="scss" scoped>
-.my-card {
+.wv-card {
   position: relative;
   margin: 10px 4px;
   padding-bottom: 12px;

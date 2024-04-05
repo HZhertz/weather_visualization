@@ -1,6 +1,6 @@
 import instance from '../instance'
-// import type { SearchHotCitysRes } from '@/types/searchInfo'
-// : Promise<SearchHotCitysRes>
+
+// 获取空气指数散点数据
 export const getAqiScatter = (type: string) => {
   return instance({
     method: 'GET',
